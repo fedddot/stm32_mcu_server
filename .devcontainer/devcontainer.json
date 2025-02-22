@@ -17,7 +17,7 @@
 			],
 			"settings": {
 				"clangd.path": "/usr/lib/llvm-18/bin/clangd",
-				// "clangd.arguments": ["--query-driver=/usr/bin/arm-none-eabi-g++,/usr/bin/arm-none-eabi-gcc"]
+				"clangd.arguments": ["--query-driver=/usr/bin/arm-none-eabi-g++,/usr/bin/arm-none-eabi-gcc"]
 			}
 		}
 	},
