@@ -1,6 +1,6 @@
 {
-	"name": "pico-dev-container",
-	"image": "pico-dev:latest",
+	"name": "stm-dev-container",
+	"image": "stm-dev:latest",
 	"privileged": true,
 	"runArgs": [ "--network=host" ],
 	"customizations": {
@@ -17,7 +17,7 @@
 			],
 			"settings": {
 				"clangd.path": "/usr/lib/llvm-18/bin/clangd",
-				"clangd.arguments": ["--query-driver=/usr/bin/arm-none-eabi-g++,/usr/bin/arm-none-eabi-gcc"]
+				// "clangd.arguments": ["--query-driver=/usr/bin/arm-none-eabi-g++,/usr/bin/arm-none-eabi-gcc"]
 			}
 		}
 	},
