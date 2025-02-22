@@ -16,3 +16,5 @@ build
 !*.yml
 !*.py
 !*.proto
+!cube_mx_src/.mxproject
+!cube_mx_src/cube_mx_src.ioc
