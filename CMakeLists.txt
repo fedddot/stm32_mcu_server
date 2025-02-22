@@ -7,26 +7,20 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CC_COMPILER /usr/bin/arm-none-eabi-gcc)
 set(CMAKE_CXX_COMPILER /usr/bin/arm-none-eabi-g++)
 
+add_library(cube_mx_main INTERFACE)
+target_sources(cube_mx_main INTERFACE ${CMAKE_CURRENT_LIST_DIR}/cube_mx_src/Src/main.c)
+target_include_directories(
+    cube_mx_main
+    INTERFACE
+    ${CMAKE_CURRENT_LIST_DIR}/cube_mx_src/Inc
+)
+
 add_executable(stm_mcu_server ${CMAKE_CURRENT_LIST_DIR}/src/stm_mcu_server.c)
 target_include_directories(stm_mcu_server PRIVATE ${CMAKE_CURRENT_LIST_DIR}/include)
 target_link_libraries(
     stm_mcu_server
     PRIVATE
-    host
-    ipc_option
-    protobuf_ipc_server
-
-    stepper_motor
-    stepper_motor_request
-    stepper_motor_response
-    stepper_motor_manager
-    stepper_service
-
-    pb_common
-    pb_decode
-    pb_encode
-
-    stm_stdlib
+    cube_mx_main
 )
 target_compile_definitions(
     stm_mcu_server
