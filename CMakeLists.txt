@@ -7,7 +7,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CC_COMPILER /usr/bin/arm-none-eabi-gcc)
 set(CMAKE_CXX_COMPILER /usr/bin/arm-none-eabi-g++)
 
-add_executable(stm_mcu_server ${CMAKE_CURRENT_LIST_DIR}/src/stm_mcu_server.cpp)
+add_executable(stm_mcu_server ${CMAKE_CURRENT_LIST_DIR}/src/stm_mcu_server.c)
 target_include_directories(stm_mcu_server PRIVATE ${CMAKE_CURRENT_LIST_DIR}/include)
 target_link_libraries(
     stm_mcu_server
