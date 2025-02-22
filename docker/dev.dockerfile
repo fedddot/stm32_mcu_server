@@ -19,6 +19,7 @@ ENV NANOPB_SRC_PATH=${EXTERNAL_PATH}/nanopb
 
 RUN apt install -y python3-pip
 RUN pip3 install protobuf grpcio-tools
+RUN apt-get install bsdmainutils
 
 # server sources should be mapped to this path during container run
 WORKDIR /usr/src/app
