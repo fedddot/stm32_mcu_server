@@ -11,6 +11,7 @@ RUN git clone --branch=discard-factories https://github.com/fedddot/mcu_server.g
 ENV MCU_SERVER_PATH=${EXTERNAL_PATH}/mcu_server
 
 RUN git clone --branch=v1.8.6 https://github.com/STMicroelectronics/STM32CubeF1.git stm32_cube_f1
+RUN cd stm32_cube_f1 && git submodule update --init --recursive
 ENV STM32_CUBE_F1_SRC_PATH=${EXTERNAL_PATH}/stm32_cube_f1
 
 RUN git clone --branch=0.4.9 https://github.com/nanopb/nanopb.git nanopb

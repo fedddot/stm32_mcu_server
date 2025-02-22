@@ -35,8 +35,3 @@ target_compile_definitions(
     -DIPC_BAUD=115200UL
     -DIPC_BUFF_SIZE=256UL
 )
-
-add_subdirectory(external)
-
-add_subdirectory(ipc)
-add_subdirectory(platform)
