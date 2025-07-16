@@ -22,8 +22,5 @@
 		}
 	},
 	"workspaceMount": "source=${localWorkspaceFolder},target=/usr/app/src,type=bind",
-	"workspaceFolder": "/usr/app/src",
-	"mounts": [
-		"source=${localEnv:HOME}/STM32Cube/Repository/STM32Cube_FW_F1_V1.8.6,target=/usr/src/external/stm32_cube_f1,type=bind"
-	]
+	"workspaceFolder": "/usr/app/src"
 }
