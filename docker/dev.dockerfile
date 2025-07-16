@@ -7,7 +7,7 @@ RUN apt install -y gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-
 ARG EXTERNAL_PATH=/usr/src/external
 WORKDIR ${EXTERNAL_PATH} 
 
-RUN git clone --branch=discard-factories https://github.com/fedddot/mcu_server.git mcu_server
+RUN git clone --branch=main https://github.com/fedddot/mcu_server.git mcu_server
 ENV MCU_SERVER_PATH=${EXTERNAL_PATH}/mcu_server
 
 RUN git clone --branch=v1.8.6 https://github.com/STMicroelectronics/STM32CubeF1.git stm32_cube_f1
@@ -18,10 +18,13 @@ RUN git clone --branch=0.4.9 https://github.com/nanopb/nanopb.git nanopb
 ENV NANOPB_SRC_PATH=${EXTERNAL_PATH}/nanopb
 
 RUN apt install -y python3-pip
-RUN pip3 install protobuf grpcio-tools
-RUN apt-get install bsdmainutils
+RUN pip3 install --break-system-packages protobuf grpcio-tools
+RUN apt-get install -y bsdmainutils
 
 # server sources should be mapped to this path during container run
 WORKDIR /usr/src/app
+
+ENV CC=/usr/bin/arm-none-eabi-gcc
+ENV CXX=/usr/bin/arm-none-eabi-g++
 
 CMD ["/bin/bash"]
