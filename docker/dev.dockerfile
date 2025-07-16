@@ -24,7 +24,6 @@ RUN apt-get install -y bsdmainutils
 # server sources should be mapped to this path during container run
 WORKDIR /usr/src/app
 
-ENV CC=/usr/bin/arm-none-eabi-gcc
-ENV CXX=/usr/bin/arm-none-eabi-g++
+ENV PATH=${PATH}:/usr/bin
 
 CMD ["/bin/bash"]
