@@ -14,7 +14,7 @@ set(HAL_DRIVERS_PATH $ENV{STM32_CUBE_F1_SRC_PATH}/Drivers)
 # )
 add_executable(
     stm_mcu_server
-    ${CMAKE_CURRENT_LIST_DIR}/src/stm_mcu_server.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/stm_mcu_server.cpp
     ${HAL_DRIVERS_PATH}/CMSIS/Device/ST/STM32F1xx/Source/Templates/system_stm32f1xx.c
     ${HAL_DRIVERS_PATH}/CMSIS/Device/ST/STM32F1xx/Source/Templates/gcc/startup_stm32f103xb.s
     ${HAL_DRIVERS_PATH}/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c
