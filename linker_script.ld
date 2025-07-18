@@ -14,10 +14,8 @@ _Min_Stack_Size = 0x400;
 SECTIONS {
     .isr_vector : {
         . = ALIGN(4);
-        _eisr_vector = .;
         KEEP(*(.isr_vector)) /* Startup code */
         . = ALIGN(4);
-        _eisr_vector = .;
     } >FLASH
 
   /* The program code and other data goes into FLASH */
@@ -101,8 +99,6 @@ SECTIONS {
     _sdata = .;        /* create a global symbol at data start */
     *(.data)           /* .data sections */
     *(.data*)          /* .data* sections */
-    *(.RamFunc)        /* .RamFunc sections */
-    *(.RamFunc*)       /* .RamFunc* sections */
 
     . = ALIGN(4);
   } >RAM AT> FLASH

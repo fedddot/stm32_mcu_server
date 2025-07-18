@@ -1,12 +1,14 @@
+#include <cstdint>
+
 extern "C" {
     int main(void);
     void Reset_Handler(void);
-    extern unsigned long _estack;
+    extern std::uint32_t _estack;
 }
 
 typedef void (*isr_procedure_t)(void);
 
-__attribute__((section(".isr_vector"), used)) isr_procedure_t g_pfnVectors[] = {
+__attribute__((section(".isr_vector"), used)) isr_procedure_t g_pfnVectors[2] = {
     (isr_procedure_t)(&_estack),
     Reset_Handler,
 };
@@ -16,6 +18,7 @@ void Reset_Handler(void) {
 }
 
 int main(void) {
+    const std::uint32_t jajaja = 0xdeadbeef;
     while (1) {
     }
 }
