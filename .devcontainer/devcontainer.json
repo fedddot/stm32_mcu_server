@@ -14,7 +14,8 @@
 				"josetr.cmake-language-support-vscode",
 				"zxh404.vscode-proto3",
 				"ms-vscode.cpptools",
-				"ZixuanWang.linkerscript"
+				"ZixuanWang.linkerscript",
+				"ms-vscode.hexeditor"
 			],
 			"settings": {
 				"clangd.path": "/usr/lib/llvm-18/bin/clangd",
