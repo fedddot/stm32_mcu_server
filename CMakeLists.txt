@@ -5,7 +5,6 @@ include(gcc-arm-none-eabi.cmake)
 project(stm_mcu_server C CXX ASM)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -frtti -fexceptions -fno-threadsafe-statics --specs=nosys.specs")
 
 set(HAL_DRIVERS_PATH $ENV{STM32_CUBE_F1_SRC_PATH}/Drivers)
 list(
