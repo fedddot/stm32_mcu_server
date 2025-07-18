@@ -4,6 +4,7 @@ extern "C" {
     int main(void);
     void Reset_Handler(void);
     extern std::uint32_t _estack;
+    extern std::uint32_t __data_start;
 }
 
 typedef void (*isr_procedure_t)(void);
@@ -19,6 +20,7 @@ void Reset_Handler(void) {
 
 int main(void) {
     const std::uint32_t jajaja = 0xdeadbeef;
+    const std::uint8_t *data_start_ptr = (std::uint8_t *)__data_start;
     while (1) {
     }
 }
