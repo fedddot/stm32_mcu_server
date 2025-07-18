@@ -17,7 +17,6 @@ int main(void) {
     MX_GPIO_Init();
     std::size_t counter(0UL);
     while (1) {
-        throw std::runtime_error("agaga");
         HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
         counter = 10;
         while (counter) {
