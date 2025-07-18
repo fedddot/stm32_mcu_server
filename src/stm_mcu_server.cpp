@@ -1,5 +1,6 @@
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_gpio.h"
+#include <cstddef>
 
 static void Error_Handler(void);
 static void SystemClock_Config(void);
@@ -16,13 +17,13 @@ int main(void) {
     
     while (1) {
         HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-        // for (size_t auto i = 0; i < 10000; ++i) {
-        //     ;
-        // }
+        for (std::size_t i = 0; i < 1000; ++i) {
+            ;
+        }
         HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-        // for (size_t auto i = 0; i < 10000; ++i) {
-        //     ;
-        // }
+        for (std::size_t i = 0; i < 1000; ++i) {
+            ;
+        }
     }
 }
 
