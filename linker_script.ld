@@ -5,7 +5,6 @@ MEMORY {
     FLASH (rx)  : ORIGIN = 0x08000000,  LENGTH = 64K
 }
 
-/* Highest address of the user mode stack */
 _estack = ORIGIN(RAM) + LENGTH(RAM);    /* end of RAM */
 
 _Min_Heap_Size = 0x200;
@@ -14,35 +13,24 @@ _Min_Stack_Size = 0x400;
 SECTIONS {
     .isr_vector : {
         . = ALIGN(4);
-        KEEP(*(.isr_vector)) /* Startup code */
+        KEEP(*(.isr_vector))
         . = ALIGN(4);
     } >FLASH
 
-  /* The program code and other data goes into FLASH */
-  .text :
-  {
-    . = ALIGN(4);
-    *(.text)           /* .text sections (code) */
-    *(.text*)          /* .text* sections (code) */
-    *(.glue_7)         /* glue arm to thumb code */
-    *(.glue_7t)        /* glue thumb to arm code */
-    *(.eh_frame)
+    .text : {
+        . = ALIGN(4);
+        *(.text)
+        *(.text*)
+        . = ALIGN(4);
+    } >FLASH
 
-    KEEP (*(.init))
-    KEEP (*(.fini))
-
-    . = ALIGN(4);
-    _etext = .;        /* define a global symbols at end of code */
-  } >FLASH
-
-  /* Constant data goes into FLASH */
-  .rodata :
-  {
-    . = ALIGN(4);
-    *(.rodata)         /* .rodata sections (constants, strings, etc.) */
-    *(.rodata*)        /* .rodata* sections (constants, strings, etc.) */
-    . = ALIGN(4);
-  } >FLASH
+    .rodata :
+    {
+        . = ALIGN(4);
+        *(.rodata)
+        *(.rodata*)
+        . = ALIGN(4);
+    } >FLASH
 
   .ARM.extab (READONLY) : /* The "READONLY" keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
