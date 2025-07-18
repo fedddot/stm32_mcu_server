@@ -26,8 +26,17 @@ SECTIONS {
 
     .rodata : {
         . = ALIGN(4);
+        __rodata_start = .;
         *(.rodata)
         *(.rodata*)
+        . = ALIGN(4);
+    } >FLASH
+
+    .ARM (READONLY) : {
+        . = ALIGN(4);
+        __exidx_start = .;
+        *(.ARM.exidx*)
+        __exidx_end = .;
         . = ALIGN(4);
     } >FLASH
 
@@ -57,6 +66,7 @@ SECTIONS {
         *(.bss*)
         *(COMMON)
         . = ALIGN(4);
+        end = .;
     } >RAM
 
     /DISCARD/ :
