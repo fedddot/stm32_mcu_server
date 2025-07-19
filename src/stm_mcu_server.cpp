@@ -20,24 +20,19 @@ __attribute__((section(".isr_vector"), used)) std::uint32_t g_pfnVectors[68] = {
     (size_t)(&Reset_Handler),
 };
 
-const auto g_str_var = std::string_view("asdfasdf");
-auto g_int_var = std::uint32_t(0xdeadbeef);
-
 void Reset_Handler(void) {
     auto flash_source_ptr = (const char *)&_sidata;
     auto ram_start_ptr = (char *)&_sdata;
     auto ram_end_ptr = (const char *)&_edata;
-    
     auto size = ram_end_ptr - ram_start_ptr;
-    auto data_ptr = g_str_var.data();
-    (void)data_ptr;
     if (nullptr == std::memcpy(ram_start_ptr, flash_source_ptr, size)) {
         throw std::runtime_error("failed to init .data section");
     }
     main();
 }
 
-
+const auto g_str_var = std::string_view("asdfasdf");
+auto g_int_var = std::uint32_t(0xdeadbeef);
 
 int main(void) {
     (void)g_str_var;
