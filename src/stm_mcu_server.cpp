@@ -11,13 +11,14 @@ extern "C" {
     extern std::uint32_t _sidata;
     extern std::uint32_t _sdata;
     extern std::uint32_t _edata;
+    extern std::uint32_t _estack;
 }
 
 typedef void (*isr_procedure_t)(void);
 
 __attribute__((section(".isr_vector"), used)) std::uint32_t g_pfnVectors[68] = {
-    0x20005000,
-    (size_t)(&Reset_Handler),
+    (std::uint32_t)(&_estack),
+    (std::uint32_t)(&Reset_Handler),
 };
 
 void Reset_Handler(void) {
