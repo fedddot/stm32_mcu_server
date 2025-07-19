@@ -66,7 +66,16 @@ SECTIONS {
         *(.bss*)
         *(COMMON)
         . = ALIGN(4);
-        end = .;
+    } >RAM
+
+    ._user_heap_stack (NOLOAD) :
+    {
+        . = ALIGN(8);
+        PROVIDE ( end = . );
+        PROVIDE ( _end = . );
+        . = . + _Min_Heap_Size;
+        . = . + _Min_Stack_Size;
+        . = ALIGN(8);
     } >RAM
 
     /DISCARD/ :
