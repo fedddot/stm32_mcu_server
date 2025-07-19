@@ -35,8 +35,5 @@
 		}
 	},
 	"workspaceMount": "source=${localWorkspaceFolder},target=/usr/app/src,type=bind",
-	"workspaceFolder": "/usr/app/src",
-	"mounts": [
-		"source=${localEnv:HOME}/dev/stm32_driver,target=/usr/app/src/driver,type=bind"
-	]
+	"workspaceFolder": "/usr/app/src"
 }

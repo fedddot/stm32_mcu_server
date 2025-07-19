@@ -47,9 +47,9 @@ SECTIONS {
         PROVIDE ( s_data_end_ram = . );
         . = ALIGN(4);
     } >RAM AT> FLASH
-    PROVIDE ( g_data_start_ram = ADDR( .data ) );
-    PROVIDE ( g_data_size = SIZEOF( .data ) );
-    PROVIDE ( g_data_flash_addr = LOADADDR( .data ) );
+    PROVIDE ( _data_start_ram = ADDR( .data ) );
+    PROVIDE ( _data_size = SIZEOF( .data ) );
+    PROVIDE ( _data_flash_addr = LOADADDR( .data ) );
 
     .tdata :  {
         . = ALIGN(4);
