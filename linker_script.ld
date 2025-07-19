@@ -40,16 +40,17 @@ SECTIONS {
         . = ALIGN(4);
     } >FLASH
 
-    .data : {
+    _sidata = LOADADDR(.data);
+    .data : 
+    {
         . = ALIGN(4);
-        *(.data)
-        *(.data*)
-        PROVIDE ( s_data_end_ram = . );
+        _sdata = .;        /* create a global symbol at data start */
+        *(.data)           /* .data sections */
+        *(.data*)          /* .data* sections */
+
         . = ALIGN(4);
+        _edata = .;        /* define a global symbol at data end */
     } >RAM AT> FLASH
-    PROVIDE ( _data_start_ram = ADDR( .data ) );
-    PROVIDE ( _data_size = SIZEOF( .data ) );
-    PROVIDE ( _data_flash_addr = LOADADDR( .data ) );
 
     .tdata :  {
         . = ALIGN(4);
