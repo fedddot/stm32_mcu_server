@@ -1,35 +1,47 @@
+#include <cstddef>
 #include <cstdint>
 #include <cstring>
 #include <stdexcept>
+#include <string_view>
+
+int main(void);
+void Reset_Handler(void);
 
 extern "C" {
-    int main(void);
-    void Reset_Handler(void);
-    extern std::uint32_t _data_start_ram;
-    extern std::uint32_t _data_size;
-    extern std::uint32_t _data_flash_addr;
+    extern std::uint32_t _sidata;
+    extern std::uint32_t _sdata;
+    extern std::uint32_t _edata;
 }
 
 typedef void (*isr_procedure_t)(void);
 
 __attribute__((section(".isr_vector"), used)) std::uint32_t g_pfnVectors[68] = {
     0x20005000,
-    (std::uint32_t)(&Reset_Handler),
+    (size_t)(&Reset_Handler),
 };
 
+const auto g_str_var = std::string_view("asdfasdf");
+auto g_int_var = std::uint32_t(0xdeadbeef);
+
 void Reset_Handler(void) {
-    const auto source_ptr = (const char *)_data_flash_addr;
-    auto dest_ptr = (char *)_data_start_ram;
-    auto size = _data_size;
-    while (size) {
-        *dest_ptr = *source_ptr;
-        --size;
+    auto flash_source_ptr = (const char *)&_sidata;
+    auto ram_start_ptr = (char *)&_sdata;
+    auto ram_end_ptr = (const char *)&_edata;
+    
+    auto size = ram_end_ptr - ram_start_ptr;
+    auto data_ptr = g_str_var.data();
+    (void)data_ptr;
+    if (nullptr == std::memcpy(ram_start_ptr, flash_source_ptr, size)) {
+        throw std::runtime_error("failed to init .data section");
     }
     main();
 }
 
+
+
 int main(void) {
-    const auto str_var = std::string("asdf");
+    (void)g_str_var;
+    (void)g_int_var;
     while (1) {
     }
 }
