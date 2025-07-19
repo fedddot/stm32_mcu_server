@@ -11,8 +11,21 @@ add_executable(
     ${CMAKE_PROJECT_NAME}
     ${CMAKE_CURRENT_LIST_DIR}/src/${CMAKE_PROJECT_NAME}.cpp
 )
+target_include_directories(
+    ${CMAKE_PROJECT_NAME}
+    PRIVATE
+    $ENV{STM32_CUBE_F1_SRC_PATH}/Drivers/CMSIS/Device/ST/STM32F1xx/Include
+)
 target_compile_definitions(
     ${CMAKE_PROJECT_NAME}
     PRIVATE
     -DSTM32F103x6
 )
+target_link_libraries(
+    ${CMAKE_PROJECT_NAME}
+    PRIVATE
+    thermostat_host_builder
+    proto_thermostat_api_request_parser
+    proto_thermostat_api_response_serializer
+)
+add_subdirectory($ENV{MCU_SERVER_PATH} ${CMAKE_BINARY_DIR}/_deps/mcu_server-build)

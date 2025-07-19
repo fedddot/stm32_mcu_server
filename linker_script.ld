@@ -42,13 +42,14 @@ SECTIONS {
 
     .data : {
         . = ALIGN(4);
-        g_data_start_ram = .;
         *(.data)
         *(.data*)
-        g_data_end_ram = .;
+        PROVIDE ( s_data_end_ram = . );
         . = ALIGN(4);
     } >RAM AT> FLASH
-    g_data_flash_addr = LOADADDR(.tdata)
+    PROVIDE ( g_data_start_ram = ADDR( .data ) );
+    PROVIDE ( g_data_size = SIZEOF( .data ) );
+    PROVIDE ( g_data_flash_addr = LOADADDR( .data ) );
 
     .tdata :  {
         . = ALIGN(4);
@@ -57,7 +58,7 @@ SECTIONS {
         g_tdata_end_ram = .;
         . = ALIGN(4);
     } >RAM AT> FLASH
-    g_tdata_flash_addr = LOADADDR(.tdata)
+    g_tdata_flash_addr = LOADADDR(.tdata);
 
     .tbss (NOLOAD) : {
         . = ALIGN(4);
