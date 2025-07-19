@@ -5,7 +5,7 @@ MEMORY {
     FLASH (rx)  : ORIGIN = 0x08000000,  LENGTH = 64K
 }
 
-_estack = ORIGIN(RAM) + LENGTH(RAM);
+g_stack_start = ORIGIN(RAM) + LENGTH(RAM);
 
 _Min_Heap_Size = 0x200;
 _Min_Stack_Size = 0x400;
@@ -42,17 +42,22 @@ SECTIONS {
 
     .data : {
         . = ALIGN(4);
-        __data_start = .;
+        g_data_start_ram = .;
         *(.data)
         *(.data*)
+        g_data_end_ram = .;
         . = ALIGN(4);
     } >RAM AT> FLASH
+    g_data_flash_addr = LOADADDR(.tdata)
 
     .tdata :  {
         . = ALIGN(4);
+        g_tdata_start_ram = .;
         *(.tdata .tdata.* .gnu.linkonce.td.*)
+        g_tdata_end_ram = .;
         . = ALIGN(4);
     } >RAM AT> FLASH
+    g_tdata_flash_addr = LOADADDR(.tdata)
 
     .tbss (NOLOAD) : {
         . = ALIGN(4);
