@@ -7,10 +7,10 @@ int main(void);
 void Reset_Handler(void);
 
 extern "C" {
-    extern std::uint32_t _sidata;
-    extern std::uint32_t _sdata;
-    extern std::uint32_t _edata;
-    extern std::uint32_t _estack;
+    extern char _sidata;
+    extern char _sdata;
+    extern char _edata;
+    extern char _estack;
 }
 
 typedef void (*isr_procedure_t)(void);
