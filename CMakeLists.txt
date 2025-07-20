@@ -21,4 +21,18 @@ target_compile_definitions(
     PRIVATE
     -DSTM32F103x6
 )
+target_link_libraries(
+    ${CMAKE_PROJECT_NAME}
+    PRIVATE
+    ipc_data
+    ipc_data_writer
+    ipc_instance
+    relay_controller
+
+    temperature_sensor_controller
+    thermostat_host_builder
+    timer_scheduler
+    proto_thermostat_api_request_parser
+    proto_thermostat_api_response_serializer
+)
 add_subdirectory($ENV{MCU_SERVER_PATH} ${CMAKE_BINARY_DIR}/_deps/mcu_server-build)
