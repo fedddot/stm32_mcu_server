@@ -12,13 +12,23 @@ target_sources(
     mcu_startup
     INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/mcu_startup.cpp
+    /usr/src/external/stm32_cube_f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c
+    /usr/src/external/stm32_cube_f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c
+    /usr/src/external/stm32_cube_f1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c
+    /usr/src/external/stm32_cube_f1/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/system_stm32f1xx.c
 )
 target_include_directories(
     mcu_startup
     INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
     $ENV{STM32_CUBE_F1_SRC_PATH}/Drivers/CMSIS/Device/ST/STM32F1xx/Include
     $ENV{STM32_CUBE_F1_SRC_PATH}/Drivers/STM32F1xx_HAL_Driver/Inc
     $ENV{STM32_CUBE_F1_SRC_PATH}/Drivers/CMSIS/Include
+)
+target_link_libraries(
+    mcu_startup
+    INTERFACE
+    c
 )
 
 add_executable(

@@ -13,6 +13,7 @@ extern "C" {
     extern char _sdata;
     extern char _edata;
     extern char _estack;
+    extern char __libc_init_array;
     
     void reset_isr(void);
 }
@@ -29,6 +30,9 @@ void reset_isr(void) {
         throw std::runtime_error("failed to init .data section");
     }
     init_clock();
+    auto init_array = (void (*)(void))&__libc_init_array;
+    init_array();
+
     main();
 }
 

@@ -25,7 +25,7 @@ static Host<ThermostatVendorApiRequest, ThermostatVendorApiResponse> create_host
 int main(void) {
     auto host = create_host();
     while (1) {
-        host.run_once();
+        // host.run_once();
     }
 }
 
@@ -64,15 +64,17 @@ public:
     }
 };
 
+ThermostatHostBuilder s_builder;
 inline Host<ThermostatVendorApiRequest, ThermostatVendorApiResponse> create_host(void) {
-    ThermostatHostBuilder builder;
-    builder
-        .set_api_request_parser(ApiRequestParser())
-        .set_api_response_serializer(ApiResponseSerializer())
+    ApiRequestParser s_parser;
+    ApiResponseSerializer s_serializer;
+    s_builder
+        .set_api_request_parser(s_parser)
+        .set_api_response_serializer(s_serializer)
         .set_raw_data_reader(ThermostatHostBuilder::RawDataReaderInstance(new RawDataReader()))
         .set_raw_data_writer(ThermostatHostBuilder::RawDataWriterInstance(new RawDataWriter()))
         .set_relay_controller(ThermostatHostBuilder::RelayControllerInstance(new StmRelayController()))
         .set_scheduler(ThermostatHostBuilder::SchedulerInstance(new StmTimerScheduler()))
         .set_temp_sensor(ThermostatHostBuilder::SensorInstance(new StmTempSensor()));
-    return builder.build();
+    return s_builder.build();
 }
