@@ -1,4 +1,3 @@
-#include <cstdint>
 #include <cstring>
 #include <stdexcept>
 
@@ -20,32 +19,13 @@ using namespace vendor;
 using namespace ipc;
 using namespace manager;
 
-int main(void);
+static Host<ThermostatVendorApiRequest, ThermostatVendorApiResponse> create_host(void);
 
-extern "C" {
-    void Reset_Handler(void);
-    extern char _sidata;
-    extern char _sdata;
-    extern char _edata;
-    extern char _estack;
-}
-
-typedef void (*isr_procedure_t)(void);
-
-__attribute__((section(".isr_vector"), used)) std::uint32_t g_pfnVectors[68] = {
-    (std::uint32_t)(&_estack),
-    (std::uint32_t)(&Reset_Handler),
-};
-
-void Reset_Handler(void) {
-    auto flash_source_ptr = (const char *)&_sidata;
-    auto ram_start_ptr = (char *)&_sdata;
-    auto ram_end_ptr = (const char *)&_edata;
-    auto size = ram_end_ptr - ram_start_ptr;
-    if (nullptr == std::memcpy(ram_start_ptr, flash_source_ptr, size)) {
-        throw std::runtime_error("failed to init .data section");
+int main(void) {
+    auto host = create_host();
+    while (1) {
+        host.run_once();
     }
-    main();
 }
 
 class RawDataReader: public IpcDataReader<RawData> {
@@ -83,7 +63,7 @@ public:
     }
 };
 
-static inline Host<ThermostatVendorApiRequest, ThermostatVendorApiResponse> create_host(void) {
+inline Host<ThermostatVendorApiRequest, ThermostatVendorApiResponse> create_host(void) {
     ThermostatHostBuilder builder;
     builder
         .set_api_request_parser(ApiRequestParser())
@@ -94,11 +74,4 @@ static inline Host<ThermostatVendorApiRequest, ThermostatVendorApiResponse> crea
         .set_scheduler(ThermostatHostBuilder::SchedulerInstance(new StmTimerScheduler()))
         .set_temp_sensor(ThermostatHostBuilder::SensorInstance(new StmTempSensor()));
     return builder.build();
-}
-
-int main(void) {
-    auto host = create_host();
-    while (1) {
-        host.run_once();
-    }
 }
