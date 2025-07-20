@@ -27,7 +27,21 @@ void reset_isr(void) {
     main();
 }
 
+void nmi_isr(void) {
+    throw std::runtime_error("AHAHAHA");
+    while (true) {
+    }
+}
+
+void hard_fault_isr(void) {
+    throw std::runtime_error("AHAHAHA");
+    while (true) {
+    }
+}
+
 __attribute__((section(".isr_vector"), used)) std::uint32_t g_pfnVectors[VECTORS_TABLE_SIZE] = {
     (std::uint32_t)(&_estack),
     (std::uint32_t)(&reset_isr),
+    (std::uint32_t)(&nmi_isr),
+    (std::uint32_t)(&hard_fault_isr),
 };

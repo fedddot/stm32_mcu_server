@@ -1,4 +1,5 @@
 #include <cstring>
+#include <optional>
 #include <stdexcept>
 
 #include "ipc_data.hpp"
@@ -31,7 +32,7 @@ int main(void) {
 class RawDataReader: public IpcDataReader<RawData> {
 public:
     std::optional<ipc::Instance<RawData>> read() override {
-        return ipc::Instance<RawData>(new RawData());
+        return std::nullopt;
     }
 };
 
