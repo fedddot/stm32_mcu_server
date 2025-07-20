@@ -7,6 +7,9 @@ project(stm_mcu_server C CXX ASM)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -T \"${CMAKE_CURRENT_LIST_DIR}/linker_script.ld\"")
 
+add_library(mcu_startup INTERFACE)
+target_sources(mcu_startup INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src/mcu_startup.cpp)
+
 add_executable(
     ${CMAKE_PROJECT_NAME}
     ${CMAKE_CURRENT_LIST_DIR}/src/${CMAKE_PROJECT_NAME}.cpp
@@ -24,6 +27,8 @@ target_compile_definitions(
 target_link_libraries(
     ${CMAKE_PROJECT_NAME}
     PRIVATE
+    mcu_startup
+    
     ipc_data
     ipc_data_writer
     ipc_instance
