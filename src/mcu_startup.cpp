@@ -38,9 +38,9 @@ void reset_isr(void) {
         throw std::runtime_error("failed to init .bss section");
     }
     SystemInit();
-    init_clock();
     auto init_array = (void (*)(void))&__libc_init_array;
     init_array();
+    // init_clock();
     main();
 }
 
