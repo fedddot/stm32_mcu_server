@@ -20,7 +20,7 @@ static host::Host<ThermostatVendorApiRequest, ThermostatVendorApiResponse> creat
 class StmThermoManagerController: public ThermostatManagerController {
 public:
     double read_temperature() const override {
-        throw std::runtime_error("NOT IMPLEMENTED");
+        return 33.0;
     }
     void set_relay_state(const bool state) override {
         ;
@@ -41,7 +41,7 @@ int main(void) {
 class ApiRequestReader: public ipc::IpcDataReader<ThermostatVendorApiRequest> {
 public:
     std::optional<ipc::Instance<ThermostatVendorApiRequest>> read() override {
-        return std::nullopt;
+        return ipc::Instance<ThermostatVendorApiRequest>(new ThermostatVendorApiRequest(ThermostatVendorApiRequest::RequestType::GET_TEMP));
     }
 };
 
