@@ -21,9 +21,9 @@ target_include_directories(
     mcu_startup
     INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-    $ENV{STM32_CUBE_F1_SRC_PATH}/Drivers/CMSIS/Device/ST/STM32F1xx/Include
-    $ENV{STM32_CUBE_F1_SRC_PATH}/Drivers/STM32F1xx_HAL_Driver/Inc
-    $ENV{STM32_CUBE_F1_SRC_PATH}/Drivers/CMSIS/Include
+    $ENV{STM32_CUBE_SRC_PATH}/Drivers/CMSIS/Device/ST/STM32F1xx/Include
+    $ENV{STM32_CUBE_SRC_PATH}/Drivers/STM32F1xx_HAL_Driver/Inc
+    $ENV{STM32_CUBE_SRC_PATH}/Drivers/CMSIS/Include
 )
 target_link_libraries(
     mcu_startup
@@ -45,15 +45,13 @@ target_link_libraries(
     ${CMAKE_PROJECT_NAME}
     PRIVATE
     mcu_startup
-
     ipc_data
     ipc_data_writer
     ipc_instance
-    relay_controller
-
-    temperature_sensor_controller
+    thermostat_manager_controller
+    thermostat_api_request
+    thermostat_api_response
     thermostat_host_builder
-    timer_scheduler
     proto_thermostat_api_request_parser
     proto_thermostat_api_response_serializer
 )
