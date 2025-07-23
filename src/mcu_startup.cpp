@@ -13,8 +13,10 @@ extern "C" {
     extern char _sdata;
     extern char _edata;
     extern char _estack;
+    extern char _sbss;
+    extern char _ebss;
     extern char __libc_init_array;
-    
+    extern void SystemInit(void);
     void reset_isr(void);
 }
 
@@ -29,10 +31,16 @@ void reset_isr(void) {
     if (nullptr == std::memcpy(ram_start_ptr, flash_source_ptr, size)) {
         throw std::runtime_error("failed to init .data section");
     }
+    auto bss_start_ptr = (char *)&_sbss;
+    auto bss_end_ptr = (const char *)&_ebss;
+    const auto bss_size = bss_end_ptr - bss_start_ptr;
+    if (nullptr == std::memset(bss_start_ptr, 0, bss_size)) {
+        throw std::runtime_error("failed to init .bss section");
+    }
+    SystemInit();
     init_clock();
     auto init_array = (void (*)(void))&__libc_init_array;
     init_array();
-
     main();
 }
 
