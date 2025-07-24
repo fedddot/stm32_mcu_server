@@ -45,13 +45,6 @@ target_link_libraries(
     ${CMAKE_PROJECT_NAME}
     PRIVATE
     mcu_startup
-    host
-    ipc_data_writer
-    ipc_instance
-    thermostat_manager
-    thermostat_manager_controller
-    thermostat_api_request
-    thermostat_api_response
-    thermostat_vendor
+    thermostat_host_builder
 )
 add_subdirectory($ENV{MCU_SERVER_PATH} ${CMAKE_BINARY_DIR}/_deps/mcu_server-build)
