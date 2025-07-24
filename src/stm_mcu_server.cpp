@@ -43,9 +43,11 @@ int main(void) {
 inline Host<ApiRequest, ApiResponse> create_host(ThermoService *service_ptr) {
     return Host<ApiRequest, ApiResponse>(
         [](void) -> std::optional<ApiRequest> {
-            return std::nullopt;
+            return ApiRequest(
+                ApiRequest::RequestType::GET_TEMP
+            );
         },
-        [](const ApiResponse) {
+        [](const ApiResponse& response) {
             return;
         },
         [](const std::exception& e) -> ApiResponse {
