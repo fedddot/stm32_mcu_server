@@ -5,6 +5,7 @@
 
 #include "thermostat_host_builder.hpp"
 #include "thermostat_controller.hpp"
+#include "thermostat_service.hpp"
 
 using namespace host;
 using namespace service;
@@ -12,6 +13,7 @@ using namespace service;
 using RawData = std::vector<char>;
 using ApiRequest = ThermostatHostBuilder<RawData>::ApiRequest;
 using ApiResponse = ThermostatHostBuilder<RawData>::ApiResponse;
+using ThermoService = ThermostatHostBuilder<RawData>::Service;
 
 class StmThermoManagerController: public ThermostatController {
 public:
@@ -26,45 +28,32 @@ public:
     }
 };
 
+static Host<ApiRequest, ApiResponse> create_host(ThermoService *service_ptr);
+
 int main(void) {
     StmThermoManagerController controller;
-    auto host = create_host(&controller);
+    ThermostatService service(&controller);
+
+    auto host = create_host(&service);
     while (1) {
         host.run_once();
     }
 }
 
-class ApiRequestReader: public ipc::IpcDataReader<ThermostatVendorApiRequest> {
-public:
-    std::optional<ipc::Instance<ThermostatVendorApiRequest>> read() override {
-        return ipc::Instance<ThermostatVendorApiRequest>(new ThermostatVendorApiRequest(ThermostatVendorApiRequest::RequestType::GET_TEMP));
-    }
-};
-
-class ApiResposeWriter: public IpcDataWriter<ThermostatVendorApiResponse> {
-public:
-    void write(const ThermostatVendorApiResponse& data) const override {
-        ;
-    }
-};
-
-inline Host<ThermostatVendorApiRequest, ThermostatVendorApiResponse> create_host(ThermostatManagerController *controller_ptr) {
-    using ThermoHost = Host<ThermostatVendorApiRequest, ThermostatVendorApiResponse>;
-    const auto manager_instance = ThermostatVendor::ThermostatManagerInstance(
-        new ThermostatManager(controller_ptr)
-    );
-    const auto vendor_instance = ThermoHost::VendorInstance(
-        new ThermostatVendor(manager_instance)
-    );
-    return Host<ThermostatVendorApiRequest, ThermostatVendorApiResponse>(
-        ThermoHost::ApiRequestReaderInstance(new ApiRequestReader()),
-        ThermoHost::ApiResponseWriterInstance(new ApiResposeWriter()),
-        vendor_instance,
-        [](const std::exception& e) -> ThermostatVendorApiResponse {
-            return ThermostatVendorApiResponse(
-                ThermostatVendorApiResponse::Result::FAILURE,
+inline Host<ApiRequest, ApiResponse> create_host(ThermoService *service_ptr) {
+    return Host<ApiRequest, ApiResponse>(
+        [](void) -> std::optional<ApiRequest> {
+            return std::nullopt;
+        },
+        [](const ApiResponse) {
+            return;
+        },
+        [](const std::exception& e) -> ApiResponse {
+            return ApiResponse(
+                ApiResponse::Result::FAILURE,
                 std::string(e.what())
             );
-        }
+        },
+        service_ptr
     );
 }
