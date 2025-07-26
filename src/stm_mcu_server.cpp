@@ -3,6 +3,7 @@
 #include <cstring>
 #include <optional>
 #include <stdexcept>
+#include <string_view>
 #include <vector>
 
 #include "thermostat_host_builder.hpp"
@@ -42,6 +43,14 @@ int main(void) {
     StmThermoManagerController controller;
     ThermostatService service(&controller);
 
+    const std::string_view test_message = "test_message";
+    char encoded_size[] =  { 0, 0, 0, static_cast<char>(test_message.size()) };
+    for (const auto ch : encoded_size) {
+        s_buffer.push_back(ch);
+    }
+    for (const auto ch : test_message) {
+        s_buffer.push_back(ch);
+    }
     auto host = create_host(&service);
     while (1) {
         host.run_once();
