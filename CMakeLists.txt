@@ -49,6 +49,7 @@ target_link_libraries(
     thermostat_controller
     thermostat_service
     raw_data_buffer
+    proto_thermostat_api_request_parser
 )
 
 add_library(raw_data_buffer INTERFACE)

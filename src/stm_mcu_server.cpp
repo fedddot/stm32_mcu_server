@@ -1,3 +1,5 @@
+#include <climits>
+#include <cstddef>
 #include <cstring>
 #include <optional>
 #include <stdexcept>
@@ -6,11 +8,13 @@
 #include "thermostat_host_builder.hpp"
 #include "thermostat_controller.hpp"
 #include "thermostat_service.hpp"
+#include "raw_data_buffer.hpp"
+#include "proto_thermostat_api_request_parser.hpp"
 
 using namespace host;
 using namespace service;
 
-using RawData = std::vector<char>;
+using RawData = RawDataBuffer<256UL>;
 using ApiRequest = ThermostatHostBuilder<RawData>::ApiRequest;
 using ApiResponse = ThermostatHostBuilder<RawData>::ApiResponse;
 using ThermoService = ThermostatHostBuilder<RawData>::Service;
@@ -30,6 +34,10 @@ public:
 
 static Host<ApiRequest, ApiResponse> create_host(ThermoService *service_ptr);
 
+enum: std::size_t { ENCODED_SIZE_LEN = 4UL };
+RawData s_buffer;
+static ipc::ApiRequestParser s_api_request_parser;
+
 int main(void) {
     StmThermoManagerController controller;
     ThermostatService service(&controller);
@@ -40,12 +48,49 @@ int main(void) {
     }
 }
 
+
+static inline std::optional<std::size_t> retrieve_size(const RawData& data) {    
+    if (data.size() < ENCODED_SIZE_LEN) {
+        return std::nullopt;
+    }
+    std::size_t decoded_size(0UL);
+    for (auto i = std::size_t(0UL); i < static_cast<std::size_t>(ENCODED_SIZE_LEN); ++i) {
+        decoded_size <<= CHAR_BIT;
+        decoded_size |= static_cast<std::size_t>(data.get(i));
+    }
+    return decoded_size;
+}
+
+static inline std::optional<std::vector<char>> read_payload(RawData *data, const std::size_t payload_size) {
+    if (data->size() < ENCODED_SIZE_LEN + payload_size) {
+        return std::nullopt;
+    }
+    std::size_t bytes_remaining = ENCODED_SIZE_LEN;
+    while (bytes_remaining) {
+        data->pop_first();
+        --bytes_remaining;
+    }
+    std::vector<char> payload(payload_size);
+    for (std::size_t i = 0; i < payload_size; ++i) {
+        payload[i] = data->pop_first();
+    }
+    return payload;
+}
+
 inline Host<ApiRequest, ApiResponse> create_host(ThermoService *service_ptr) {
+    
     return Host<ApiRequest, ApiResponse>(
         [](void) -> std::optional<ApiRequest> {
-            return ApiRequest(
-                ApiRequest::RequestType::GET_TEMP
-            );
+            enum: std::size_t { ENCODED_SIZE_LEN = 4UL };
+            const auto payload_size = retrieve_size(s_buffer);
+            if (!payload_size.has_value()) {
+                return std::nullopt;
+            }
+            const auto payload = read_payload(&s_buffer, payload_size.value());
+            if (!payload.has_value()) {
+                return std::nullopt;
+            }
+            return s_api_request_parser(payload.value());
         },
         [](const ApiResponse& response) {
             return;

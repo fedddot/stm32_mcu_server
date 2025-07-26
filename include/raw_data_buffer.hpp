@@ -35,6 +35,13 @@ namespace service {
 			return value;
 		}
 
+		char get(const std::size_t index) const {
+			if (index >= size()) {
+				throw std::out_of_range("Index out of range in RawDataBuffer");
+			}
+			return m_buffer[(m_head + index) % N];
+		}
+		
 		std::size_t size() const {
 			if (m_full) {
 				return N;
@@ -55,6 +62,8 @@ namespace service {
 		bool empty() const {
 			return (!m_full && (m_head == m_tail));
 		}
+
+		
 	private:
 		std::array<char, N> m_buffer;
 		std::size_t m_head;
