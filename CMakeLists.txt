@@ -48,5 +48,10 @@ target_link_libraries(
     thermostat_host_builder
     thermostat_controller
     thermostat_service
+    raw_data_buffer
 )
+
+add_library(raw_data_buffer INTERFACE)
+target_include_directories(raw_data_buffer INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
 add_subdirectory($ENV{MCU_SERVER_PATH} ${CMAKE_BINARY_DIR}/_deps/mcu_server-build)
