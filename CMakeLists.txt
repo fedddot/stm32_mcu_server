@@ -50,6 +50,7 @@ target_link_libraries(
     thermostat_service
     raw_data_buffer
     proto_thermostat_api_request_parser
+    proto_thermostat_api_response_serializer
 )
 
 add_library(raw_data_buffer INTERFACE)
