@@ -6,6 +6,7 @@
 #include <vector>
 #include "stm32f103x6.h"
 #include "data_buffer.hpp"
+#include "stm_isr_vector.hpp"
 
 namespace stm32 {
     class StmUartController {
@@ -36,7 +37,7 @@ namespace stm32 {
             USART1->CR1 = USART_CR1_TE | USART_CR1_RE | USART_CR1_RXNEIE | USART_CR1_UE;
 
             // Enable USART1 interrupt in NVIC
-            NVIC_SetVector(USART1_IRQn, (uint32_t)(&uart_rx_interrupt_handler));
+            init_uart1_isr(&StmUartController::uart_rx_interrupt_handler);
             NVIC_EnableIRQ(USART1_IRQn);
 
             s_data_buffer = data_buffer;

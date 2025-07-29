@@ -7,9 +7,8 @@
 
 extern "C" {
     extern char _estack;            // defined by the linker
+    extern void reset_isr(void);    // defined in mcu_startup.cpp
 }
-
-extern void reset_isr(void);        // defined in mcu_startup.cpp
 
 static stm32::IsrCallback s_hard_fault_isr_callback;
 void stm32::init_hard_fault_isr(const IsrCallback& callback) {

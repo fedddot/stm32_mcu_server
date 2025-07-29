@@ -50,6 +50,7 @@ target_link_libraries(
     stm_uart_controller
     INTERFACE
     data_buffer
+    stm_isr_vector
 )
 
 add_executable(

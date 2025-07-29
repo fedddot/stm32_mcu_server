@@ -1,4 +1,3 @@
-#include <cstdint>
 #include <cstring>
 #include <stdexcept>
 
@@ -44,25 +43,6 @@ void reset_isr(void) {
     main();
 }
 
-void nmi_isr(void) {
-    throw std::runtime_error("AHAHAHA");
-    while (true) {
-    }
-}
-
-void hard_fault_isr(void) {
-    throw std::runtime_error("AHAHAHA");
-    while (true) {
-    }
-}
-
-__attribute__((section(".isr_vector"), used)) std::uint32_t g_pfnVectors[VECTORS_TABLE_SIZE] = {
-    (std::uint32_t)(&_estack),
-    (std::uint32_t)(&reset_isr),
-    (std::uint32_t)(&nmi_isr),
-    (std::uint32_t)(&hard_fault_isr),
-};
-
 void init_clock(void) {
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
@@ -72,7 +52,7 @@ void init_clock(void) {
     RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
     if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
-        hard_fault_isr();
+        throw std::runtime_error("failed to configure system clock");
     }
 
     RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
@@ -82,6 +62,6 @@ void init_clock(void) {
     RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
     if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK) {
-        hard_fault_isr();
+        throw std::runtime_error("failed to configure system clock");
     }
 }
