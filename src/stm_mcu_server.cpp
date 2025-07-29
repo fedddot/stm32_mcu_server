@@ -13,6 +13,7 @@
 #include "proto_thermostat_api_request_parser.hpp"
 #include "proto_thermostat_api_response_serializer.hpp"
 #include "service_api.pb.h"
+#include "stm_uart_controller.hpp"
 
 using namespace host;
 using namespace service;
@@ -36,6 +37,7 @@ static ipc::ApiRequestParser s_api_request_parser;
 int main(void) {
     StmThermoManagerController controller;
     ThermostatService service(&controller);
+    StmUartController uart_controller(&s_buffer);
 
     const auto request = ApiRequest(ApiRequest::RequestType::GET_TEMP);
     write_test_request(request);

@@ -39,6 +39,14 @@ target_link_libraries(
     thermostat_controller
 )
 
+add_library(stm_uart_controller INTERFACE)
+target_include_directories(stm_uart_controller INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(
+    stm_uart_controller
+    INTERFACE
+    data_buffer
+)
+
 add_executable(
     ${CMAKE_PROJECT_NAME}
     ${CMAKE_CURRENT_LIST_DIR}/src/${CMAKE_PROJECT_NAME}.cpp
@@ -60,6 +68,7 @@ target_link_libraries(
     proto_thermostat_api_request_parser
     proto_thermostat_api_response_serializer
     stm_thermo_manager_controller
+    stm_uart_controller
 )
 
 add_subdirectory($ENV{MCU_SERVER_PATH} ${CMAKE_BINARY_DIR}/_deps/mcu_server-build)
