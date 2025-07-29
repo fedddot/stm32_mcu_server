@@ -7,7 +7,8 @@
 
 #include "ring_data_buffer.hpp"
 #include "thermostat_host_builder.hpp"
-#include "thermostat_controller.hpp"
+#include "stm_thermo_manager_controller.hpp"
+#include "stm_thermo_manager_controller.hpp"
 #include "thermostat_service.hpp"
 #include "proto_thermostat_api_request_parser.hpp"
 #include "proto_thermostat_api_response_serializer.hpp"
@@ -16,6 +17,7 @@
 using namespace host;
 using namespace service;
 using namespace host_tools;
+using namespace stm32;
 
 #define DATA_BUFFER_SIZE 256UL
 #define PACKAGE_SIZE_FIELD_LENGTH 4UL
@@ -24,19 +26,6 @@ using HostBuilder = ThermostatHostBuilder<PACKAGE_SIZE_FIELD_LENGTH>;
 using ApiRequest = HostBuilder::ApiRequest;
 using ApiResponse = HostBuilder::ApiResponse;
 using ThermoService = HostBuilder::Service;
-
-class StmThermoManagerController: public ThermostatController {
-public:
-    double read_temperature() const override {
-        return 33.0;
-    }
-    void set_relay_state(const bool state) override {
-        ;
-    }
-    TaskGuard *schedule_task(const Task& task, const std::size_t period_ms) override {
-        throw std::runtime_error("NOT IMPLEMENTED");
-    }
-};
 
 static Host<ApiRequest, ApiResponse> create_host(ThermoService *service_ptr);
 static void write_test_request(const ApiRequest& request);
@@ -73,30 +62,30 @@ inline Host<ApiRequest, ApiResponse> create_host(ThermoService *service_ptr) {
 }
 
 inline std::vector<std::uint8_t> serialize_thermostat_request(const ApiRequest& request) {
-	const auto request_type_mapping = std::map<ThermostatApiRequest::RequestType, service_api_RequestType> {
-		{ ThermostatApiRequest::RequestType::START, service_api_RequestType_START },
-		{ ThermostatApiRequest::RequestType::STOP, service_api_RequestType_STOP },
-		{ ThermostatApiRequest::RequestType::GET_TEMP, service_api_RequestType_GET_TEMP }
-	};
-	auto casted_temp = float(0.0);
-	if (request.temperature()) {
-		casted_temp = static_cast<float>(request.temperature().value());
-	}
-	auto casted_time_resolution = std::size_t(0);
-	if (request.time_resolution_ms()) {
-		casted_time_resolution = request.time_resolution_ms().value();
-	}
-	const auto pb_request = service_api_ThermostatApiRequest {
-		.request_type = request_type_mapping.at(request.type()),
-		.set_temperature = casted_temp,
-		.time_resolution_ms = static_cast<uint32_t>(casted_time_resolution),
-	};
-	pb_byte_t buffer[256];
-	auto ostream = pb_ostream_from_buffer(buffer, sizeof(buffer));
-	if (!pb_encode(&ostream, service_api_ThermostatApiRequest_fields, &pb_request)) {
-		throw std::runtime_error("Failed to encode ThermostatApiRequest to raw data");
-	}
-	return std::vector<std::uint8_t>((const char *)buffer, (const char *)(buffer + ostream.bytes_written));
+    const auto request_type_mapping = std::map<ThermostatApiRequest::RequestType, service_api_RequestType> {
+        { ThermostatApiRequest::RequestType::START, service_api_RequestType_START },
+        { ThermostatApiRequest::RequestType::STOP, service_api_RequestType_STOP },
+        { ThermostatApiRequest::RequestType::GET_TEMP, service_api_RequestType_GET_TEMP }
+    };
+    auto casted_temp = float(0.0);
+    if (request.temperature()) {
+        casted_temp = static_cast<float>(request.temperature().value());
+    }
+    auto casted_time_resolution = std::size_t(0);
+    if (request.time_resolution_ms()) {
+        casted_time_resolution = request.time_resolution_ms().value();
+    }
+    const auto pb_request = service_api_ThermostatApiRequest {
+        .request_type = request_type_mapping.at(request.type()),
+        .set_temperature = casted_temp,
+        .time_resolution_ms = static_cast<uint32_t>(casted_time_resolution),
+    };
+    pb_byte_t buffer[256];
+    auto ostream = pb_ostream_from_buffer(buffer, sizeof(buffer));
+    if (!pb_encode(&ostream, service_api_ThermostatApiRequest_fields, &pb_request)) {
+        throw std::runtime_error("Failed to encode ThermostatApiRequest to raw data");
+    }
+    return std::vector<std::uint8_t>((const char *)buffer, (const char *)(buffer + ostream.bytes_written));
 }
 
 inline void write_test_request(const ApiRequest& request) {

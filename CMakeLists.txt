@@ -31,6 +31,14 @@ target_link_libraries(
     c
 )
 
+add_library(stm_thermo_manager_controller INTERFACE)
+target_include_directories(stm_thermo_manager_controller INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(
+    stm_thermo_manager_controller
+    INTERFACE
+    thermostat_controller
+)
+
 add_executable(
     ${CMAKE_PROJECT_NAME}
     ${CMAKE_CURRENT_LIST_DIR}/src/${CMAKE_PROJECT_NAME}.cpp
@@ -51,6 +59,7 @@ target_link_libraries(
     thermostat_service
     proto_thermostat_api_request_parser
     proto_thermostat_api_response_serializer
+    stm_thermo_manager_controller
 )
 
 add_subdirectory($ENV{MCU_SERVER_PATH} ${CMAKE_BINARY_DIR}/_deps/mcu_server-build)
