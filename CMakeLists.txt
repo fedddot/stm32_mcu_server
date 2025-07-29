@@ -7,6 +7,10 @@ project(stm_mcu_server C CXX ASM)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -T \"${CMAKE_CURRENT_LIST_DIR}/linker_script.ld\"")
 
+add_library(stm_isr_vector INTERFACE)
+target_sources(stm_isr_vector INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src/stm_isr_vector.cpp)
+target_include_directories(stm_isr_vector INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
 add_library(mcu_startup INTERFACE)
 target_sources(
     mcu_startup
@@ -28,6 +32,7 @@ target_include_directories(
 target_link_libraries(
     mcu_startup
     INTERFACE
+    stm_isr_vector
     c
 )
 
