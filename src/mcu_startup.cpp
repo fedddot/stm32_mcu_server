@@ -5,7 +5,7 @@
 #include "stm32f1xx_hal_rcc.h"
 #include "stm32f1xx_hal_flash.h"
 
-#define VECTORS_TABLE_SIZE 68UL
+#define VECTORS_TABLE_SIZE 0x42UL
 
 extern "C" {
     // defined by the linker
