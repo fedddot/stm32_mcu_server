@@ -18,13 +18,13 @@ namespace stm32 {
                 throw std::invalid_argument("null data buffer ptr received");
             }
             // TODO: init UART peripherals
-            // TODO: init an interrupt handler for UART RX which pushes data into the s_data_buffer
+            // TODO: init an interrupt handler for UART RX which calles to uart_rx_interrupt_handler
             s_data_buffer = data_buffer;
         }
         StmUartController(const StmUartController&) = delete;
         StmUartController& operator=(const StmUartController&) = delete;
         virtual ~StmUartController() noexcept {
-            // TODO: uninit UART peripherals
+            // TODO: uninit UART peripherals and interrupt handler
             s_data_buffer = nullptr;
         }
         void write(const std::vector<std::uint8_t>& data) {
@@ -32,6 +32,9 @@ namespace stm32 {
         }
     private:
         static host_tools::DataBuffer<std::uint8_t> *s_data_buffer;
+        static void uart_rx_interrupt_handler() {
+            // TODO: read a byte from UART RX and push it into s_data_buffer
+        }
     };
 
     inline host_tools::DataBuffer<std::uint8_t> *StmUartController::s_data_buffer = nullptr;
