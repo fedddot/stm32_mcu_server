@@ -28,7 +28,7 @@ using ApiRequest = HostBuilder::ApiRequest;
 using ApiResponse = HostBuilder::ApiResponse;
 using ThermoService = HostBuilder::Service;
 
-static Host<ApiRequest, ApiResponse> create_host(ThermoService *service_ptr);
+static Host<ApiRequest, ApiResponse> create_host(ThermoService *service_ptr, StmUartController *uart_controller);
 static void write_test_request(const ApiRequest& request);
 
 RingDataBuffer<std::uint8_t, DATA_BUFFER_SIZE> s_buffer;
@@ -42,21 +42,21 @@ int main(void) {
     const auto request = ApiRequest(ApiRequest::RequestType::GET_TEMP);
     write_test_request(request);
 
-    auto host = create_host(&service);
+    auto host = create_host(&service, &uart_controller);
     while (1) {
         host.run_once();
     }
 }
 
-inline Host<ApiRequest, ApiResponse> create_host(ThermoService *service_ptr) {
+inline Host<ApiRequest, ApiResponse> create_host(ThermoService *service_ptr, StmUartController *uart_controller) {
     HostBuilder builder;
     builder
         .set_api_request_parser(ipc::ApiRequestParser())
         .set_api_response_serializer(ipc::ApiResponseSerializer())
         .set_raw_data_buffer(&s_buffer)
         .set_raw_data_writer(
-            [](const std::vector<std::uint8_t>& data) {
-                throw std::runtime_error("Raw data writer is not implemented");
+            [uart_controller](const std::vector<std::uint8_t>& data) {
+                uart_controller->write(data);
             }
         )
         .set_service(service_ptr);
