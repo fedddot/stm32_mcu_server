@@ -15,7 +15,6 @@
 #include "service_api.pb.h"
 #include "stm_uart_controller.hpp"
 
-#include "stm32f1xx_hal_conf.h"
 #include "stm32f1xx_hal.h"
 
 using namespace host;
