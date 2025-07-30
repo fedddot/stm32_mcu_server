@@ -52,8 +52,6 @@ int main(void) {
 
     auto host = create_host(&service, &uart_controller);
     while (1) {
-        std::uint8_t byte(0);
-        HAL_USART_Receive_IT(USART_HandleTypeDef *husart, int *pRxData, int Size)
         host.run_once();
     }
 }
