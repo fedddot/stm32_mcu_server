@@ -4,7 +4,9 @@
 #include <cstdint>
 #include <stdexcept>
 #include <vector>
+
 #include "stm32f103xb.h"
+
 #include "data_buffer.hpp"
 #include "stm_isr_vector.hpp"
 

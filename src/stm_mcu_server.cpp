@@ -53,8 +53,6 @@ int main(void) {
     }
 }
 
-#define UART_TIMEOUT (uint32_t)(1000)
-
 inline Host<ApiRequest, ApiResponse> create_host(ThermoService *service_ptr, StmUartController *uart_controller_ptr) {
     HostBuilder builder;
     builder
