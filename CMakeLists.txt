@@ -45,6 +45,11 @@ target_link_libraries(
 )
 
 add_library(stm_uart_controller INTERFACE)
+target_sources(
+    stm_uart_controller
+    INTERFACE
+    $ENV{STM32_CUBE_SRC_PATH}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c
+)
 target_include_directories(stm_uart_controller INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(
     stm_uart_controller
@@ -56,6 +61,7 @@ target_link_libraries(
 add_executable(
     ${CMAKE_PROJECT_NAME}
     ${CMAKE_CURRENT_LIST_DIR}/src/${CMAKE_PROJECT_NAME}.cpp
+    $ENV{STM32_CUBE_SRC_PATH}/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c
 )
 
 target_compile_definitions(
