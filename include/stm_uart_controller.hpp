@@ -28,6 +28,15 @@ namespace stm32 {
             s_data_buffer = nullptr;
         }
         void write(const std::vector<std::uint8_t>& data) {
+            for (const auto byte : data) {
+                while (!(USART1->SR & USART_SR_TXE)) {
+                    ;
+                }
+                USART1->DR = static_cast<uint8_t>(byte);
+            }
+            while (!(USART1->SR & USART_SR_TC)) {
+                ;
+            }
         }
     private:
         static host_tools::DataBuffer<std::uint8_t> *s_data_buffer;
