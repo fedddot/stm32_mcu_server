@@ -7,7 +7,7 @@
 
 extern "C" {
     extern char _estack;            // defined by the linker
-    extern void reset_isr(void);    // defined in mcu_startup.cpp
+    extern void Reset_Handler(void);    // defined in mcu_startup.cpp
 }
 
 static stm32::IsrCallback s_hard_fault_isr_callback;
@@ -42,7 +42,7 @@ static void uart1_isr(void) {
 
 __attribute__((section(".isr_vector"), used)) std::uint32_t g_pfnVectors[VECTORS_TABLE_SIZE] = {
     (std::uint32_t)(&_estack),
-    (std::uint32_t)(&reset_isr),
+    (std::uint32_t)(&Reset_Handler),
     (std::uint32_t)(&nmi_isr),
     (std::uint32_t)(&hard_fault_isr),
     (std::uint32_t)(&hard_fault_isr),

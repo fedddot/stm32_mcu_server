@@ -10,12 +10,12 @@ extern "C" {
     extern char _sbss;
     extern char _ebss;
     extern char __libc_init_array;
-    void reset_isr(void);
+    void Reset_Handler(void);
 }
 
 extern int main(void);
 
-void reset_isr(void) {
+void Reset_Handler(void) {
     auto flash_source_ptr = (const char *)&_sidata;
     auto ram_start_ptr = (char *)&_sdata;
     auto ram_end_ptr = (const char *)&_edata;
