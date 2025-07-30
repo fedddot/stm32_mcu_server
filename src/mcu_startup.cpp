@@ -6,14 +6,13 @@ extern "C" {
     extern char _sidata;
     extern char _sdata;
     extern char _edata;
-    extern char _estack;
     extern char _sbss;
     extern char _ebss;
-    extern char __libc_init_array;
+    extern char __libc_init_array; // at libc
     void Reset_Handler(void);
 }
 
-extern int main(void);
+extern int main(void); // at stm_mcu_server.cpp
 
 void Reset_Handler(void) {
     auto flash_source_ptr = (const char *)&_sidata;

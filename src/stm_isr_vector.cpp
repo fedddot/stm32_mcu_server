@@ -6,8 +6,8 @@
 #define VECTORS_TABLE_SIZE 0x42UL
 
 extern "C" {
-    extern char _estack;            // defined by the linker
-    extern void Reset_Handler(void);    // defined in mcu_startup.cpp
+    extern char _estack;                // stack bottom, defined by the linker
+    extern void Reset_Handler(void);    // at mcu_startup.cpp
 }
 
 static stm32::IsrCallback s_hard_fault_isr_callback;
@@ -17,6 +17,10 @@ void stm32::init_hard_fault_isr(const IsrCallback& callback) {
 static void hard_fault_isr(void) {
     if (s_hard_fault_isr_callback) {
         s_hard_fault_isr_callback();
+        return;
+    }
+    while (true) {
+        ; // trap
     }
 }
 
