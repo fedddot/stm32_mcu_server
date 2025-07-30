@@ -48,7 +48,7 @@ int main(void) {
     write_test_request(request);
 
     auto host = create_host(&service, &uart_controller);
-    while (1) {
+    while (true) {
         host.run_once();
     }
 }
