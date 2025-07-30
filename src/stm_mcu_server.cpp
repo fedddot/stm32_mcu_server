@@ -15,7 +15,7 @@
 #include "service_api.pb.h"
 #include "stm_uart_controller.hpp"
 
-#include "stm32f1xx_hal.h"
+#include "stm32f103xb.h"
 
 using namespace host;
 using namespace service;
@@ -36,12 +36,10 @@ static void write_test_request(const ApiRequest& request);
 RingDataBuffer<std::uint8_t, DATA_BUFFER_SIZE> s_buffer;
 static ipc::ApiRequestParser s_api_request_parser;
 
-static void SystemClock_Config();
-static void MX_GPIO_Init();
+static void init_clock();
 
 int main(void) {
-    SystemClock_Config();
-    MX_GPIO_Init();
+    init_clock();
     StmUartController uart_controller(&s_buffer);
     StmThermoManagerController controller;
     ThermostatService service(&controller);
@@ -110,50 +108,34 @@ inline void write_test_request(const ApiRequest& request) {
     }
 }
 
-void SystemClock_Config(void) {
-    RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-    RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-
-    /** Initializes the RCC Oscillators according to the specified parameters
-    * in the RCC_OscInitTypeDef structure.
-    */
-    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-    RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
-    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
-        throw std::runtime_error("osc cfg failed");
+void init_clock(void) {
+    // 1. Enable HSI (internal 8 MHz RC oscillator)
+    RCC->CR |= RCC_CR_HSION;
+    while ((RCC->CR & RCC_CR_HSIRDY) == 0) {
+        // Wait for HSI ready
     }
 
-    /** Initializes the CPU, AHB and APB buses clocks
-    */
-    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                                |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
-    RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-    RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+    // 2. Set HSI as system clock
+    RCC->CFGR &= ~RCC_CFGR_SW; // Clear SW bits
+    RCC->CFGR |= RCC_CFGR_SW_HSI; // Select HSI as system clock
 
-    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK) {
-        throw std::runtime_error("clock cfg failed");
+    // 3. Wait until HSI is used as system clock
+    while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_HSI) {
+        // Wait for switch
     }
-}
 
-static void MX_GPIO_Init(void) {
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
+    // 4. Set AHB, APB1, APB2 prescalers to /1 (no division)
+    RCC->CFGR &= ~RCC_CFGR_HPRE;  // AHB prescaler = 1
+    RCC->CFGR &= ~RCC_CFGR_PPRE1; // APB1 prescaler = 1
+    RCC->CFGR &= ~RCC_CFGR_PPRE2; // APB2 prescaler = 1
 
-    /* GPIO Ports Clock Enable */
-    __HAL_RCC_GPIOC_CLK_ENABLE();
-    __HAL_RCC_GPIOD_CLK_ENABLE();
-    __HAL_RCC_GPIOA_CLK_ENABLE();
+    // 5. Disable PLL (not used)
+    RCC->CR &= ~RCC_CR_PLLON;
+    while (RCC->CR & RCC_CR_PLLRDY) {
+        // Wait for PLL to be disabled
+    }
 
-    /*Configure GPIO pin Output Level */
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-
-    /*Configure GPIO pin : PC13 */
-    GPIO_InitStruct.Pin = GPIO_PIN_13;
-    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+    // 6. Optionally, set Flash latency to 0 (for HSI 8MHz, 0 wait states)
+    FLASH->ACR &= ~FLASH_ACR_LATENCY;
+    FLASH->ACR |= FLASH_ACR_LATENCY_0;
 }
