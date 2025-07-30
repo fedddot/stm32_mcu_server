@@ -10,7 +10,6 @@ extern "C" {
     extern char _sbss;
     extern char _ebss;
     extern char __libc_init_array;
-    extern void SystemInit(void);
     void reset_isr(void);
 }
 
