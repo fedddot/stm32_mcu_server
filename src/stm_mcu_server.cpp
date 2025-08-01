@@ -50,8 +50,8 @@ int main(void) {
 	const auto header_generator = [](const std::vector<std::uint8_t>& payload, const std::size_t& header_size) -> std::vector<std::uint8_t> {
 		return ipc::serialize_package_size(payload.size(), header_size);
 	};
-	const auto raw_data_writer = [](const std::vector<std::uint8_t>& raw_data)  {
-		(void)raw_data;
+	const auto raw_data_writer = [uart_controller_ptr = &uart_controller](const std::vector<std::uint8_t>& raw_data)  {
+		uart_controller_ptr->write(raw_data);
 	};
 	const auto api_request_parser = ipc::ApiRequestParser();
 	const auto api_response_serializer = ipc::ApiResponseSerializer();
