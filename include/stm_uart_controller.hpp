@@ -7,27 +7,27 @@
 
 #include "stm32f103xb.h"
 
-#include "data_buffer.hpp"
+#include "ipc_queue.hpp"
 #include "stm_isr_vector.hpp"
 
 namespace stm32 {
     class StmUartController {
     public:
-        StmUartController(host_tools::DataBuffer<std::uint8_t> *data_buffer) {
-            if (s_data_buffer) {
+        StmUartController(ipc::IpcQueue<std::uint8_t> *ipc_queue) {
+            if (s_ipc_queue) {
                 throw std::runtime_error("an instance of uart controller already exists");
             }
-            if (!data_buffer) {
+            if (!ipc_queue) {
                 throw std::invalid_argument("null data buffer ptr received");
             }
             init_uart();
-            s_data_buffer = data_buffer;
+            s_ipc_queue = ipc_queue;
         }
         StmUartController(const StmUartController&) = delete;
         StmUartController& operator=(const StmUartController&) = delete;
         virtual ~StmUartController() noexcept {
             uninit_uart();
-            s_data_buffer = nullptr;
+            s_ipc_queue = nullptr;
         }
         void write(const std::vector<std::uint8_t>& data) {
             for (const auto byte : data) {
@@ -41,14 +41,14 @@ namespace stm32 {
             }
         }
     private:
-        static host_tools::DataBuffer<std::uint8_t> *s_data_buffer;
+        static ipc::IpcQueue<std::uint8_t> *s_ipc_queue;
         static void uart_rx_interrupt_handler() {
-            if (!s_data_buffer) {
+            if (!s_ipc_queue) {
                 return;
             }
             if (USART1->SR & USART_SR_RXNE) {
                 auto byte = USART1->DR;
-                s_data_buffer->push_back(static_cast<std::uint8_t>(byte));
+                s_ipc_queue->enqueue(static_cast<std::uint8_t>(byte));
             }
         }
         static void init_uart() {
@@ -76,7 +76,7 @@ namespace stm32 {
         }
     };
 
-    inline host_tools::DataBuffer<std::uint8_t> *StmUartController::s_data_buffer = nullptr;
+    inline ipc::IpcQueue<std::uint8_t> *StmUartController::s_ipc_queue = nullptr;
 }
 
 #endif // STM_UART_CONTROLLER_HPP

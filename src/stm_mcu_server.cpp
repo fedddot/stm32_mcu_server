@@ -5,35 +5,35 @@
 #include <stdexcept>
 #include <vector>
 
-#include "ring_data_buffer.hpp"
-#include "thermostat_host_builder.hpp"
 #include "stm_thermo_manager_controller.hpp"
 #include "stm_thermo_manager_controller.hpp"
-#include "thermostat_service.hpp"
-#include "proto_thermostat_api_request_parser.hpp"
-#include "proto_thermostat_api_response_serializer.hpp"
-#include "service_api.pb.h"
 #include "stm_uart_controller.hpp"
+
+#include "ipc_queue.hpp"
+#include "package_utils.hpp"
+#include "proto_thermostat_api_request_parser.hpp"
+#include "proto_thermostat_api_request_serializer.hpp"
+#include "proto_thermostat_api_response_serializer.hpp"
+#include "ring_queue.hpp"
+#include "thermostat_app.hpp"
+#include "thermostat_controller.hpp"
 
 #include "stm32f103xb.h"
 
 using namespace host;
 using namespace service;
-using namespace host_tools;
 using namespace stm32;
 
 #define DATA_BUFFER_SIZE 256UL
-#define PACKAGE_SIZE_FIELD_LENGTH 4UL
+#define PACKAGE_HEADER_LENGTH 4UL
 
-using HostBuilder = ThermostatHostBuilder<PACKAGE_SIZE_FIELD_LENGTH>;
-using ApiRequest = HostBuilder::ApiRequest;
-using ApiResponse = HostBuilder::ApiResponse;
-using ThermoService = HostBuilder::Service;
+using App = ThermostatApp<PACKAGE_HEADER_LENGTH>;
+using ApiRequest = App::ApiRequest;
+using ApiResponse = App::ApiResponse;
 
-static Host<ApiRequest, ApiResponse> create_host(ThermoService *service_ptr, StmUartController *uart_controller_ptr);
 static void write_test_request(const ApiRequest& request);
 
-RingDataBuffer<std::uint8_t, DATA_BUFFER_SIZE> s_buffer;
+ipc::RingQueue<std::uint8_t, DATA_BUFFER_SIZE> s_buffer;
 static ipc::ApiRequestParser s_api_request_parser;
 
 static void init_clock();
@@ -42,30 +42,38 @@ int main(void) {
     init_clock();
     StmUartController uart_controller(&s_buffer);
     StmThermoManagerController controller;
-    ThermostatService service(&controller);
+    
+	const auto package_size_retriever = [](const ipc::IpcQueue<std::uint8_t>& package_size_data) -> std::size_t {
+		std::vector<std::uint8_t> package_size_data_vector(PACKAGE_HEADER_LENGTH, 0);
+		for (std::size_t i = 0; i < PACKAGE_HEADER_LENGTH; ++i) {
+			package_size_data_vector[i] = package_size_data.inspect(i);
+		}
+		return ipc::parse_package_size(package_size_data_vector);
+	};
+	const auto header_generator = [](const std::vector<std::uint8_t>& payload, const std::size_t& header_size) -> std::vector<std::uint8_t> {
+		return ipc::serialize_package_size(payload.size(), header_size);
+	};
+	const auto raw_data_writer = [](const std::vector<std::uint8_t>& raw_data)  {
+		(void)raw_data;
+	};
+	const auto api_request_parser = ipc::ApiRequestParser();
+	const auto api_response_serializer = ipc::ApiResponseSerializer();
+	ThermostatApp<PACKAGE_HEADER_LENGTH> app(
+		package_size_retriever,
+		api_request_parser,
+		api_response_serializer,
+		header_generator,
+		raw_data_writer,
+		&s_buffer,
+		&controller
+	);
 
     const auto request = ApiRequest(ApiRequest::RequestType::GET_TEMP);
     write_test_request(request);
 
-    auto host = create_host(&service, &uart_controller);
     while (true) {
-        host.run_once();
+        app.run_once();
     }
-}
-
-inline Host<ApiRequest, ApiResponse> create_host(ThermoService *service_ptr, StmUartController *uart_controller_ptr) {
-    HostBuilder builder;
-    builder
-        .set_api_request_parser(ipc::ApiRequestParser())
-        .set_api_response_serializer(ipc::ApiResponseSerializer())
-        .set_raw_data_buffer(&s_buffer)
-        .set_raw_data_writer(
-            [uart_controller_ptr](const std::vector<std::uint8_t>& data) {
-                uart_controller_ptr->write(data);
-            }
-        )
-        .set_service(service_ptr);
-    return builder.build();
 }
 
 inline std::vector<std::uint8_t> serialize_thermostat_request(const ApiRequest& request) {
@@ -98,11 +106,11 @@ inline std::vector<std::uint8_t> serialize_thermostat_request(const ApiRequest& 
 inline void write_test_request(const ApiRequest& request) {
     const auto serial_data = serialize_thermostat_request(request);
     const auto data_size = serial_data.size();
-    for (auto i = std::size_t(0); i < PACKAGE_SIZE_FIELD_LENGTH; ++i) {
-        s_buffer.push_back((data_size >> (i * CHAR_BIT)) & 0xFF);
+    for (auto i = std::size_t(0); i < PACKAGE_HEADER_LENGTH; ++i) {
+        s_buffer.enqueue((data_size >> (i * CHAR_BIT)) & 0xFF);
     }
     for (const auto byte : serial_data) {
-        s_buffer.push_back(byte);
+        s_buffer.enqueue(byte);
     }
 }
 

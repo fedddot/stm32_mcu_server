@@ -49,7 +49,7 @@ target_include_directories(stm_uart_controller INTERFACE ${CMAKE_CURRENT_SOURCE_
 target_link_libraries(
     stm_uart_controller
     INTERFACE
-    data_buffer
+    ipc_queue
     stm_isr_vector
 )
 
@@ -67,14 +67,16 @@ target_link_libraries(
     ${CMAKE_PROJECT_NAME}
     PRIVATE
     mcu_startup
-    ring_data_buffer
-    thermostat_host_builder
+    thermostat_app
+    ring_queue
+    thermostat_app
     thermostat_controller
     thermostat_service
     proto_thermostat_api_request_parser
     proto_thermostat_api_response_serializer
     stm_thermo_manager_controller
     stm_uart_controller
+    package_utils
 )
 
 add_subdirectory($ENV{MCU_SERVER_PATH} ${CMAKE_BINARY_DIR}/_deps/mcu_server-build)
