@@ -28,8 +28,6 @@ using App = ThermostatApp<PACKAGE_HEADER_LENGTH>;
 using ApiRequest = App::ApiRequest;
 using ApiResponse = App::ApiResponse;
 
-static void write_test_request(const ApiRequest& request);
-
 ipc::RingQueue<std::uint8_t, DATA_BUFFER_SIZE> s_buffer;
 static ipc::ApiRequestParser s_api_request_parser;
 
@@ -65,9 +63,6 @@ int main(void) {
 		&controller
 	);
 
-    const auto request = ApiRequest(ApiRequest::RequestType::GET_TEMP);
-    write_test_request(request);
-
     while (true) {
         app.run_once();
     }
@@ -98,17 +93,6 @@ inline std::vector<std::uint8_t> serialize_thermostat_request(const ApiRequest& 
         throw std::runtime_error("Failed to encode ThermostatApiRequest to raw data");
     }
     return std::vector<std::uint8_t>((const char *)buffer, (const char *)(buffer + ostream.bytes_written));
-}
-
-inline void write_test_request(const ApiRequest& request) {
-    const auto serial_data = serialize_thermostat_request(request);
-    const auto data_size = serial_data.size();
-    for (auto i = std::size_t(0); i < PACKAGE_HEADER_LENGTH; ++i) {
-        s_buffer.enqueue((data_size >> (i * CHAR_BIT)) & 0xFF);
-    }
-    for (const auto byte : serial_data) {
-        s_buffer.enqueue(byte);
-    }
 }
 
 void init_clock(void) {
