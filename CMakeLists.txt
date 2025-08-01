@@ -69,7 +69,6 @@ target_link_libraries(
     mcu_startup
 
     stm_thermo_manager_controller
-    stm_thermo_manager_controller
     stm_uart_controller
 
     ipc_queue

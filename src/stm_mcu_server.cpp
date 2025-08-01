@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "stm_thermo_manager_controller.hpp"
-#include "stm_thermo_manager_controller.hpp"
 #include "stm_uart_controller.hpp"
 
 #include "ipc_queue.hpp"
