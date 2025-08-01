@@ -12,11 +12,9 @@
 #include "ipc_queue.hpp"
 #include "package_utils.hpp"
 #include "proto_thermostat_api_request_parser.hpp"
-#include "proto_thermostat_api_request_serializer.hpp"
 #include "proto_thermostat_api_response_serializer.hpp"
 #include "ring_queue.hpp"
 #include "thermostat_app.hpp"
-#include "thermostat_controller.hpp"
 
 #include "stm32f103xb.h"
 

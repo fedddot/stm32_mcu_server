@@ -67,16 +67,17 @@ target_link_libraries(
     ${CMAKE_PROJECT_NAME}
     PRIVATE
     mcu_startup
-    thermostat_app
-    ring_queue
-    thermostat_app
-    thermostat_controller
-    thermostat_service
-    proto_thermostat_api_request_parser
-    proto_thermostat_api_response_serializer
+
+    stm_thermo_manager_controller
     stm_thermo_manager_controller
     stm_uart_controller
+
+    ipc_queue
     package_utils
+    proto_thermostat_api_request_parser
+    proto_thermostat_api_response_serializer
+    ring_queue
+    thermostat_app
 )
 
 add_subdirectory($ENV{MCU_SERVER_PATH} ${CMAKE_BINARY_DIR}/_deps/mcu_server-build)
