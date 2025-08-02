@@ -38,6 +38,7 @@ target_link_libraries(
     stm_thermo_manager_controller
     INTERFACE
     thermostat_controller
+    stm_uart_controller
 )
 
 add_library(stm_uart_controller INTERFACE)
@@ -50,6 +51,14 @@ target_link_libraries(
     stm_uart_controller
     INTERFACE
     ipc_queue
+    stm_isr_vector
+)
+
+target_include_directories(stm_uart_controller INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(
+    stm_uart_controller
+    INTERFACE
+    stm_timer_controller
     stm_isr_vector
 )
 
