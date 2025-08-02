@@ -62,6 +62,8 @@ target_compile_definitions(
     ${CMAKE_PROJECT_NAME}
     PRIVATE
     -DSTM32F103x6
+    -DDATA_BUFFER_SIZE=256UL
+    -DPACKAGE_HEADER_LENGTH=4UL
 )
 target_link_libraries(
     ${CMAKE_PROJECT_NAME}

@@ -21,8 +21,12 @@ using namespace host;
 using namespace service;
 using namespace stm32;
 
-#define DATA_BUFFER_SIZE 256UL
-#define PACKAGE_HEADER_LENGTH 4UL
+#ifndef DATA_BUFFER_SIZE
+#  error "DATA_BUFFER_SIZE is not defined"
+#endif
+#ifndef PACKAGE_HEADER_LENGTH
+#  error "DATA_BUFFER_SIZE is not defined"
+#endif
 
 using App = ThermostatApp<PACKAGE_HEADER_LENGTH>;
 using ApiRequest = App::ApiRequest;
