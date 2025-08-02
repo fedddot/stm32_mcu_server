@@ -78,6 +78,7 @@ target_compile_definitions(
     -DSTM32F103x6
     -DDATA_BUFFER_SIZE=256UL
     -DPACKAGE_HEADER_LENGTH=4UL
+    -DCLOCK_FREQUENCY=8000000UL
 )
 target_link_libraries(
     ${CMAKE_PROJECT_NAME}

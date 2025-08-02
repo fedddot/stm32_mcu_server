@@ -10,6 +10,10 @@
 #include "ipc_queue.hpp"
 #include "stm_isr_vector.hpp"
 
+#ifndef CLOCK_FREQUENCY
+#  error "CLOCK_FREQUENCY is not defined"
+#endif
+
 namespace stm32 {
     class StmUartController {
     public:
@@ -62,7 +66,7 @@ namespace stm32 {
             GPIOA->CRH &= ~(GPIO_CRH_MODE10 | GPIO_CRH_CNF10);
             GPIOA->CRH |= GPIO_CRH_CNF10_0;
             USART1->CR1 = 0;
-            USART1->BRR = 8000000UL / 115200UL;
+            USART1->BRR = CLOCK_FREQUENCY / 115200UL;
             USART1->CR1 |= USART_CR1_TE | USART_CR1_RE;
             USART1->CR1 |= USART_CR1_RXNEIE;
             USART1->CR2 = 0;

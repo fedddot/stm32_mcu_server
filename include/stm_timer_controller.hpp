@@ -6,6 +6,10 @@
 #include "stm32f103xb.h"
 #include "stm_isr_vector.hpp"
 
+#ifndef CLOCK_FREQUENCY
+#  error "CLOCK_FREQUENCY is not defined"
+#endif
+
 namespace stm32 {
     class StmTimerController {
     public:
@@ -24,7 +28,7 @@ namespace stm32 {
                     TIM1->SR &= ~TIM_SR_UIF; // Clear update interrupt flag
                 }
             );
-            TIM1->PSC = 7999; // Prescaler: 8 MHz / (7999+1) = 1 kHz (1 ms tick)
+            TIM1->PSC = (CLOCK_FREQUENCY / 1000UL) - 1; // Prescaler: 8 MHz / (7999+1) = 1 kHz (1 ms tick)
             TIM1->ARR = period_ms; // Auto-reload: period in ms
             TIM1->CNT = 0; // Clear counter
             TIM1->DIER |= TIM_DIER_UIE;
