@@ -44,13 +44,13 @@ static void uart1_isr(void) {
     }
 }
 
-static stm32::IsrCallback s_timer1_isr_callback;
-void stm32::init_timer1_isr(const IsrCallback& callback) {
-    s_timer1_isr_callback = callback;
+static stm32::IsrCallback s_timer1_up_isr_callback;
+void stm32::init_timer1_up_isr(const IsrCallback& callback) {
+    s_timer1_up_isr_callback = callback;
 }
-static void timer1_isr(void) {
-    if (s_timer1_isr_callback) {
-        s_timer1_isr_callback();
+static void timer1_up_isr(void) {
+    if (s_timer1_up_isr_callback) {
+        s_timer1_up_isr_callback();
     }
 }
 
@@ -96,7 +96,7 @@ __attribute__((section(".isr_vector"), used)) std::uint32_t g_pfnVectors[VECTORS
     (std::uint32_t)(&hard_fault_isr),
     (std::uint32_t)(&hard_fault_isr),
     (std::uint32_t)(&hard_fault_isr),
-    (std::uint32_t)(&timer1_isr),
+    (std::uint32_t)(&timer1_up_isr),
     (std::uint32_t)(&hard_fault_isr),
     (std::uint32_t)(&hard_fault_isr),
     (std::uint32_t)(&hard_fault_isr),

@@ -30,12 +30,12 @@ namespace stm32 {
 
             // 6) Enable TIM1 interrupt in NVIC
             NVIC_EnableIRQ(TIM1_UP_IRQn);
-            init_timer1_isr(task);
+            init_timer1_up_isr(task);
         }
         void unschedule_task() {
             TIM1->CR1 &= ~TIM_CR1_CEN;
             TIM1->DIER &= ~TIM_DIER_UIE;
-            init_timer1_isr(nullptr);
+            init_timer1_up_isr(nullptr);
         }
     };
 }

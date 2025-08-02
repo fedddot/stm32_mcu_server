@@ -9,7 +9,7 @@ namespace stm32 {
     void init_hard_fault_isr(const IsrCallback& callback);
     void init_nmi_isr(const IsrCallback& callback);
     void init_uart1_isr(const IsrCallback& callback);
-    void init_timer1_isr(const IsrCallback& callback);
+    void init_timer1_up_isr(const IsrCallback& callback);
 }
 
 #endif // STM_ISR_VECTOR_HPP
