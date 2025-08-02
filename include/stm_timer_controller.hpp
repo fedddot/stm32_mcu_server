@@ -16,29 +16,20 @@ namespace stm32 {
         virtual ~StmTimerController() = default;
 
         void schedule_task(const Task& task, const std::size_t& period_ms) {
-            // 1) Enable TIM1 clock
             RCC->APB2ENR |= RCC_APB2ENR_TIM1EN;
-            
-            TIM1->PSC = 7999; // Prescaler: 8 MHz / (7999+1) = 1 kHz (1 ms tick)
-            TIM1->ARR = period_ms; // Auto-reload: period in ms
-            TIM1->CNT = 0; // Clear counter
-
-            // 4) Enable update interrupt
-            TIM1->DIER |= TIM_DIER_UIE;
-
-            // 5) Enable TIM1
-            TIM1->CR1 |= TIM_CR1_CEN;
-
-            // 6) Enable TIM1 interrupt in NVIC
-            NVIC_EnableIRQ(TIM1_UP_IRQn);
             init_timer1_up_isr(
                 [task]() {
                     task();
                     TIM1->CNT = 0;
                     TIM1->SR &= ~TIM_SR_UIF; // Clear update interrupt flag
-
                 }
             );
+            TIM1->PSC = 7999; // Prescaler: 8 MHz / (7999+1) = 1 kHz (1 ms tick)
+            TIM1->ARR = period_ms; // Auto-reload: period in ms
+            TIM1->CNT = 0; // Clear counter
+            TIM1->DIER |= TIM_DIER_UIE;
+            TIM1->CR1 |= TIM_CR1_CEN;
+            NVIC_EnableIRQ(TIM1_UP_IRQn);
         }
         void unschedule_task() {
             TIM1->CR1 &= ~TIM_CR1_CEN;
