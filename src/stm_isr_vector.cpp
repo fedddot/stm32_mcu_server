@@ -1,0 +1,124 @@
+#include <cstdint>
+#include <cstring>
+
+#include "stm_isr_vector.hpp"
+
+#define VECTORS_TABLE_SIZE 0x42UL
+
+extern "C" {
+    extern char _estack;                // stack bottom, defined by the linker
+    extern void Reset_Handler(void);    // at mcu_startup.cpp
+}
+
+static stm32::IsrCallback s_hard_fault_isr_callback;
+void stm32::init_hard_fault_isr(const IsrCallback& callback) {
+    s_hard_fault_isr_callback = callback;
+}
+static void hard_fault_isr(void) {
+    if (s_hard_fault_isr_callback) {
+        s_hard_fault_isr_callback();
+        return;
+    }
+    while (true) {
+        ; // trap
+    }
+}
+
+static stm32::IsrCallback s_nmi_isr_callback;
+void stm32::init_nmi_isr(const IsrCallback& callback) {
+    s_nmi_isr_callback = callback;
+}
+static void nmi_isr(void) {
+    if (s_nmi_isr_callback) {
+        s_nmi_isr_callback();
+    }
+}
+
+static stm32::IsrCallback s_uart1_isr_callback;
+void stm32::init_uart1_isr(const IsrCallback& callback) {
+    s_uart1_isr_callback = callback;
+}
+static void uart1_isr(void) {
+    if (s_uart1_isr_callback) {
+        s_uart1_isr_callback();
+    }
+}
+
+static stm32::IsrCallback s_timer1_up_isr_callback;
+void stm32::init_timer1_up_isr(const IsrCallback& callback) {
+    s_timer1_up_isr_callback = callback;
+}
+static void timer1_up_isr(void) {
+    if (s_timer1_up_isr_callback) {
+        s_timer1_up_isr_callback();
+    }
+}
+
+__attribute__((section(".isr_vector"), used)) std::uint32_t g_pfnVectors[VECTORS_TABLE_SIZE] = {
+    (std::uint32_t)(&_estack),
+    (std::uint32_t)(&Reset_Handler),
+    (std::uint32_t)(&nmi_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&timer1_up_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&uart1_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr),
+    (std::uint32_t)(&hard_fault_isr)
+};
