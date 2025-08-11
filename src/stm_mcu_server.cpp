@@ -3,10 +3,12 @@
 #include <cstdint>
 #include <cstring>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 #include "stm_thermo_manager_controller.hpp"
 #include "stm_uart_controller.hpp"
+#include "stm_display_controller.hpp"
 
 #include "ipc_queue.hpp"
 #include "package_utils.hpp"
@@ -41,6 +43,7 @@ int main(void) {
     init_clock();
     StmUartController uart_controller(&s_buffer);
     StmThermoManagerController controller;
+    StmDisplayController display(StmDisplayController::I2CAddr::SSD1306_ADDR_SA0_0, StmDisplayController::Font::SSD1306_FONT_16);
     
 	const auto package_size_retriever = [](const ipc::IpcQueue<std::uint8_t>& package_size_data) -> std::size_t {
 		std::vector<std::uint8_t> package_size_data_vector(PACKAGE_HEADER_LENGTH, 0);
@@ -52,8 +55,9 @@ int main(void) {
 	const auto header_generator = [](const std::vector<std::uint8_t>& payload, const std::size_t& header_size) -> std::vector<std::uint8_t> {
 		return ipc::serialize_package_size(payload.size(), header_size);
 	};
-	const auto raw_data_writer = [uart_controller_ptr = &uart_controller](const std::vector<std::uint8_t>& raw_data)  {
-		uart_controller_ptr->write(raw_data);
+	const auto raw_data_writer = [uart_controller_ptr = &uart_controller, display_ptr = &display](const std::vector<std::uint8_t>& raw_data)  {
+		display_ptr->print("writing data into UART (" + std::to_string(raw_data.size()) + " bytes)");
+        uart_controller_ptr->write(raw_data);
 	};
 	const auto api_request_parser = ipc::ApiRequestParser();
 	const auto api_response_serializer = ipc::ApiResponseSerializer();
@@ -66,7 +70,7 @@ int main(void) {
 		&s_buffer,
 		&controller
 	);
-
+    display.print("app starts");
     while (true) {
         app.run_once();
     }
