@@ -1,3 +1,4 @@
 [submodule "embedded-service-framework"]
 	path = embedded-service-framework
 	url = https://github.com/fedddot/embedded-service-framework.git
+	branch = main
