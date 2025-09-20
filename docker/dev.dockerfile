@@ -1,8 +1,8 @@
 FROM esf-dev-image AS base_image
 
 RUN apk add gcc-arm-none-eabi g++-arm-none-eabi newlib-arm-none-eabi gdb-multiarch
-RUN apk add bsdmainutils
-RUN apk add python3-pip
+RUN apk add libbsd
+RUN apk add py3-pip
 RUN pip3 install --break-system-packages protobuf grpcio-tools
 
 ARG EXTERNAL_PATH=/usr/src/external
