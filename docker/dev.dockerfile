@@ -1,4 +1,4 @@
-FROM framework AS base_image
+FROM framework-dev-image AS base_image
 
 RUN apt install -y gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib gdb-multiarch
 RUN apt-get install -y bsdmainutils

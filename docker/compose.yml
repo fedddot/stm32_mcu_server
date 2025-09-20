@@ -1,5 +1,6 @@
 services:
   framework-dev-image-build:
+    image: framework-dev-image
     build:
       context: ..
       dockerfile: ./embedded-service-framework/docker/dev.dockerfile
@@ -11,5 +12,8 @@ services:
       context: ..
       dockerfile: ./docker/dev.dockerfile
       additional_contexts:
-        framework: service:framework-dev-image-build
+        framework-dev-image: service:framework-dev-image-build
       network: host
+    tty: true
+    volumes:
+      - ..:/usr/app/src
