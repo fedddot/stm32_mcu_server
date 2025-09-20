@@ -1,0 +1,15 @@
+services:
+  framework-dev-image-build:
+    build:
+      context: ..
+      dockerfile: ./embedded-service-framework/docker/dev.dockerfile
+      network: host
+
+  stm32-dev:
+    image: stm32-dev
+    build:
+      context: ..
+      dockerfile: ./docker/dev.dockerfile
+      additional_contexts:
+        framework: service:framework-dev-image-build
+      network: host
