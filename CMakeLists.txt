@@ -47,28 +47,6 @@ target_link_libraries(
     stm_isr_vector
 )
 
-add_library(ssd1306 STATIC)
-target_sources(
-    ssd1306
-    PRIVATE
-    $ENV{SSD1306_PATH}/src/driver_ssd1306.c
-)
-target_include_directories(
-    ssd1306
-    PUBLIC
-    $ENV{SSD1306_PATH}/src
-    $ENV{SSD1306_PATH}/interface
-)
-
-add_library(stm_display_controller INTERFACE)
-target_sources(
-    stm_display_controller
-    INTERFACE
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/stm_display_controller.cpp
-)
-target_include_directories(stm_display_controller INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(stm_display_controller INTERFACE ssd1306)
-
 add_executable(
     ${CMAKE_PROJECT_NAME}
     ${CMAKE_CURRENT_LIST_DIR}/src/${CMAKE_PROJECT_NAME}.cpp
