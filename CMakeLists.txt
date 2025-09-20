@@ -87,7 +87,14 @@ target_link_libraries(
     PRIVATE
     mcu_startup
     stm_uart_controller
+    package_reader
+    package_writer
+    package_utils
     stepper_service
+    host
+    api_message_reader
+    api_message_writer
+    ring_buffer_input_stream
 )
 
 add_subdirectory(embedded-service-framework ${CMAKE_BINARY_DIR}/_deps/embedded-service-framework-build)
