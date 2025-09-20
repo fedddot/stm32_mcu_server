@@ -64,15 +64,17 @@ target_link_libraries(
     ${CMAKE_PROJECT_NAME}
     PRIVATE
     mcu_startup
-    stm_uart_controller
-    package_reader
-    package_writer
-    package_utils
-    stepper_service
-    host
     api_message_reader
     api_message_writer
+    host
+    package_reader
+    package_utils
+    package_writer
     ring_buffer_input_stream
+    stepper_request
+    stepper_response
+    stepper_service
+    stm_uart_controller
 )
 
 add_subdirectory(embedded-service-framework ${CMAKE_BINARY_DIR}/_deps/embedded-service-framework-build)

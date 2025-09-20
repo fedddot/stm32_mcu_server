@@ -1,17 +1,17 @@
 #include <cstdint>
 #include <stdexcept>
 
+#include "api_message_reader.hpp"
 #include "api_message_writer.hpp"
+#include "host.hpp"
+#include "package_reader.hpp"
+#include "package_utils.hpp"
 #include "package_writer.hpp"
 #include "ring_buffer_input_stream.hpp"
 #include "stepper_request.hpp"
 #include "stepper_response.hpp"
-#include "stm_uart_controller.hpp"
 #include "stepper_service.hpp"
-#include "package_reader.hpp"
-#include "package_utils.hpp"
-#include "api_message_reader.hpp"
-#include "host.hpp"
+#include "stm_uart_controller.hpp"
 
 #include "stm32f103xb.h"
 
