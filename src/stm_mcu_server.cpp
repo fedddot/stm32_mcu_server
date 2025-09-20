@@ -1,6 +1,7 @@
 #include <cstdint>
 
 #include "ring_buffer_input_stream.hpp"
+#include "stm_uart_controller.hpp"
 #include "stepper_service.hpp"
 
 #include "stm32f103xb.h"

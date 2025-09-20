@@ -32,18 +32,7 @@ target_link_libraries(
     c
 )
 
-add_library(stm_uart_controller INTERFACE)
-target_sources(
-    stm_uart_controller
-    INTERFACE
-)
-target_include_directories(stm_uart_controller INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(
-    stm_uart_controller
-    INTERFACE
-    input_stream
-    stm_isr_vector
-)
+
 
 add_library(stm_timer_controller INTERFACE)
 target_include_directories(
@@ -103,3 +92,4 @@ target_link_libraries(
 
 add_subdirectory(embedded-service-framework ${CMAKE_BINARY_DIR}/_deps/embedded-service-framework-build)
 add_subdirectory(service)
+add_subdirectory(ipc)

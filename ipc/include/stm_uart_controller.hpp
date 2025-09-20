@@ -7,7 +7,7 @@
 
 #include "stm32f103xb.h"
 
-#include "input_stream.hpp"
+#include "ring_buffer_input_stream.hpp"
 #include "stm_isr_vector.hpp"
 
 #ifndef CLOCK_FREQUENCY
@@ -17,7 +17,7 @@
 namespace stm32 {
     class StmUartController {
     public:
-        StmUartController(ipc::InputStream<std::uint8_t> *ipc_queue) {
+        StmUartController(ipc::RingBufferInputStream<std::uint8_t> *ipc_queue) {
             if (s_ipc_queue) {
                 throw std::runtime_error("an instance of uart controller already exists");
             }
