@@ -36,4 +36,4 @@ jobs:
     - name: build
       working-directory: ${{github.workspace}}
       run: |
-        docker run -i -v ${{github.workspace}}:${{env.CONTAINER_SRC_DIR}} -v ${{github.workspace}}/bin:${{env.CONTAINER_BIN_DIR}} stm32-dev -c "cmake --build ${{env.CONTAINER_BIN_DIR}}"
+        docker run -i -v ${{github.workspace}}:${{env.CONTAINER_SRC_DIR}} -v ${{github.workspace}}/bin:${{env.CONTAINER_BIN_DIR}} stm32-dev -c "cmake --build ${{env.CONTAINER_BIN_DIR}} --target stm_mcu_server"
