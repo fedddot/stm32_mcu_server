@@ -6,16 +6,10 @@
 #include <string>
 #include <vector>
 
-#include "stm_thermo_manager_controller.hpp"
+#include "stepper_service.hpp"
 #include "stm_uart_controller.hpp"
-#include "stm_display_controller.hpp"
 
-#include "ipc_queue.hpp"
 #include "package_utils.hpp"
-#include "proto_thermostat_api_request_parser.hpp"
-#include "proto_thermostat_api_response_serializer.hpp"
-#include "ring_queue.hpp"
-#include "thermostat_app.hpp"
 
 #include "stm32f103xb.h"
 

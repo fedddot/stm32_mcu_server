@@ -7,7 +7,7 @@
 
 #include "stm32f103xb.h"
 
-#include "ipc_queue.hpp"
+#include "input_stream.hpp"
 #include "stm_isr_vector.hpp"
 
 #ifndef CLOCK_FREQUENCY
@@ -17,7 +17,7 @@
 namespace stm32 {
     class StmUartController {
     public:
-        StmUartController(ipc::IpcQueue<std::uint8_t> *ipc_queue) {
+        StmUartController(ipc::InputStream<std::uint8_t> *ipc_queue) {
             if (s_ipc_queue) {
                 throw std::runtime_error("an instance of uart controller already exists");
             }
@@ -45,7 +45,7 @@ namespace stm32 {
             }
         }
     private:
-        static ipc::IpcQueue<std::uint8_t> *s_ipc_queue;
+        static ipc::InputStream<std::uint8_t> *s_ipc_queue;
         static void uart_rx_interrupt_handler() {
             if (!s_ipc_queue) {
                 return;
@@ -81,7 +81,7 @@ namespace stm32 {
         }
     };
 
-    inline ipc::IpcQueue<std::uint8_t> *StmUartController::s_ipc_queue = nullptr;
+    inline ipc::InputStream<std::uint8_t> *StmUartController::s_ipc_queue = nullptr;
 }
 
 #endif // STM_UART_CONTROLLER_HPP

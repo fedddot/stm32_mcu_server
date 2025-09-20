@@ -32,15 +32,6 @@ target_link_libraries(
     c
 )
 
-add_library(stm_thermo_manager_controller INTERFACE)
-target_include_directories(stm_thermo_manager_controller INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(
-    stm_thermo_manager_controller
-    INTERFACE
-    thermostat_controller
-    stm_uart_controller
-)
-
 add_library(stm_uart_controller INTERFACE)
 target_sources(
     stm_uart_controller
@@ -50,7 +41,7 @@ target_include_directories(stm_uart_controller INTERFACE ${CMAKE_CURRENT_SOURCE_
 target_link_libraries(
     stm_uart_controller
     INTERFACE
-    ipc_queue
+    input_stream
     stm_isr_vector
 )
 
@@ -106,17 +97,8 @@ target_link_libraries(
     ${CMAKE_PROJECT_NAME}
     PRIVATE
     mcu_startup
-
-    stm_display_controller
-    stm_thermo_manager_controller
     stm_uart_controller
-
-    ipc_queue
-    package_utils
-    proto_thermostat_api_request_parser
-    proto_thermostat_api_response_serializer
-    ring_queue
-    thermostat_app
+    stepper_service
 )
 
 add_subdirectory(embedded-service-framework ${CMAKE_BINARY_DIR}/_deps/embedded-service-framework-build)
