@@ -8,7 +8,7 @@
 #include "stepper_response.hpp"
 
 namespace service {
-	class ThermostatService: public Service<StepperRequest, StepperResponse> {
+	class StepperService: public Service<StepperRequest, StepperResponse> {
 	public:
 		StepperResponse run_api_request(const StepperRequest& request) override {
 			throw std::runtime_error("not implemented");
