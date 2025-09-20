@@ -8,7 +8,11 @@ namespace service {
 	enum class Direction: int {
 		CLOCKWISE,
 		COUNTERCLOCKWISE,
-	}; 
+	};
+	enum class State: int {
+		ENABLED,
+		DISABLED,
+	};
 }
 
 #endif // STEPPER_TYPES_HPP
