@@ -19,5 +19,3 @@ ENV SSD1306_PATH=${EXTERNAL_PATH}/ssd1306
 WORKDIR /usr/src/app
 
 ENV PATH=${PATH}:/usr/bin
-
-CMD ["/bin/bash"]
