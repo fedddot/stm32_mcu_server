@@ -11,4 +11,4 @@ target_link_libraries(stepper_response INTERFACE stepper_types)
 
 add_library(stepper_service INTERFACE)
 target_include_directories(stepper_service INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)
-target_link_libraries(stepper_service INTERFACE service stepper_request stepper_response)
+target_link_libraries(stepper_service INTERFACE service stepper_request stepper_response stepper_provider)

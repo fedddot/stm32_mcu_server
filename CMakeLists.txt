@@ -80,3 +80,4 @@ target_link_libraries(
 add_subdirectory(embedded-service-framework ${CMAKE_BINARY_DIR}/_deps/embedded-service-framework-build)
 add_subdirectory(service)
 add_subdirectory(ipc)
+add_subdirectory(provider)
