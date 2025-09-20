@@ -1,18 +1,16 @@
-services:
-  framework-dev-image-build:
-    image: framework-dev-image
-    build:
-      context: ..
-      dockerfile: ./embedded-service-framework/docker/dev.dockerfile
-      network: host
+name: stm32-service-env
 
+include:
+  - ../embedded-service-framework/docker/compose.yml
+
+services:
   stm32-dev:
     image: stm32-dev
     build:
       context: ..
       dockerfile: ./docker/dev.dockerfile
       additional_contexts:
-        framework-dev-image: service:framework-dev-image-build
+        esf-dev-image: service:esf-dev
       network: host
     tty: true
     volumes:
