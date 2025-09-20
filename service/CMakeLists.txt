@@ -1,0 +1,10 @@
+add_library(stepper_types INTERFACE)
+target_include_directories(stepper_types INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)
+
+add_library(stepper_request INTERFACE)
+target_include_directories(stepper_request INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)
+target_link_libraries(stepper_request INTERFACE stepper_types)
+
+add_library(thermostat_service INTERFACE)
+target_include_directories(thermostat_service INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)
+target_link_libraries(thermostat_service INTERFACE service)
