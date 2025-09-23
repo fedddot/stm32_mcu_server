@@ -13,6 +13,16 @@ target_include_directories(
 )
 target_link_libraries(pb_stepper_request_parser INTERFACE stepper_service_proto)
 
+add_library(pb_stepper_response_serializer INTERFACE)
+target_include_directories(
+    pb_stepper_response_serializer
+    INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_BINARY_DIR}/ipc
+    $ENV{NANOPB_PATH}
+)
+target_link_libraries(pb_stepper_response_serializer INTERFACE stepper_service_proto)
+
 add_library(stm_uart_controller INTERFACE)
 target_include_directories(
     stm_uart_controller

@@ -77,6 +77,7 @@ target_link_libraries(
     stepper_service
     stm_uart_controller
     pb_stepper_request_parser
+    pb_stepper_response_serializer
 )
 
 add_subdirectory(embedded-service-framework ${CMAKE_BINARY_DIR}/_deps/embedded-service-framework-build)

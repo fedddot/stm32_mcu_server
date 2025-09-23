@@ -15,9 +15,9 @@ namespace service {
 		};
 		StepperResponse(
 			const Result& result,
-			const std::optional<std::string>& error_message = std::nullopt,
-			const std::optional<State>& state = std::nullopt
-		): m_result(result), m_error_message(error_message), m_state(state) {
+			const State& state,
+			const std::optional<std::string>& error_message = std::nullopt
+		): m_result(result), m_state(state), m_error_message(error_message) {
 
 		}
 		StepperResponse(const StepperResponse&) = default;
@@ -27,13 +27,16 @@ namespace service {
 		Result result() const {
 			return m_result;
 		}
-		std::optional<State> state() const {
+		State state() const {
 			return m_state;
+		}
+		std::optional<std::string> error_message() const {
+			return m_error_message;
 		}
 	private:
 		const Result m_result;
+		const State m_state;
 		const std::optional<std::string> m_error_message;
-		const std::optional<State> m_state;
 	};
 }
 

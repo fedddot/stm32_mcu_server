@@ -15,6 +15,7 @@
 #include "stepper_service.hpp"
 #include "stm_uart_controller.hpp"
 #include "pb_stepper_request_parser.hpp"
+#include "pb_stepper_response_serializer.hpp"
 
 #include "stm32f103xb.h"
 
