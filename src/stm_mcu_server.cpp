@@ -67,9 +67,7 @@ int main(void) {
     );
     ApiMessageReader<StepperRequest> request_reader(
         &package_reader,
-        [](const std::vector<std::uint8_t>& data) -> StepperRequest {
-            throw std::runtime_error("not implemented");
-        }
+        PbStepperRequestParser()
     );
     ApiMessageWriter<StepperResponse> response_writer(
         &package_writer,
