@@ -1,3 +1,8 @@
+set(CMAKE_MODULE_PATH $ENV{NANOPB_PATH}/extra)
+find_package(Nanopb REQUIRED)
+
+nanopb_generate_cpp(TARGET stepper_service_proto ${CMAKE_CURRENT_SOURCE_DIR}/proto/stepper_service.proto)
+
 add_library(stm_uart_controller INTERFACE)
 target_include_directories(
     stm_uart_controller

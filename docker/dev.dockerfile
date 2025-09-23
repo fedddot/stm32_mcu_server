@@ -15,6 +15,9 @@ ENV STM32_CUBE_SRC_PATH=${EXTERNAL_PATH}/stm32_cube_f1
 RUN git clone --branch=v1.0.10 https://github.com/libdriver/ssd1306.git ssd1306
 ENV SSD1306_PATH=${EXTERNAL_PATH}/ssd1306
 
+RUN git clone --branch=0.4.9.1 https://github.com/nanopb/nanopb.git nanopb
+ENV NANOPB_PATH=${EXTERNAL_PATH}/nanopb
+
 # server sources should be mapped to this path during container run
 WORKDIR /usr/src/app
 
