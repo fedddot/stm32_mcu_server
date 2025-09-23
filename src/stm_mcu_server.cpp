@@ -35,6 +35,7 @@ using namespace service;
 using namespace ipc;
 
 using StmPackageReader = PackageReader<PREAMBLE_SIZE_CFG, ENCODED_PAYLOAD_SIZE_LENGTH_CFG>;
+using StmPackageWriter = PackageWriter<PREAMBLE_SIZE_CFG, ENCODED_PAYLOAD_SIZE_LENGTH_CFG>;
 
 RingBufferInputStream<std::uint8_t, DATA_BUFFER_SIZE_CFG> s_buffer;
 
@@ -47,7 +48,6 @@ int main(void) {
             buff_ptr->enqueue(byte);
         }
     );
-    
     StmPackageReader::Preamble preamble;
     if (nullptr == std::memcpy(preamble.data(), PREAMBLE_CFG, PREAMBLE_SIZE_CFG)) {
         throw std::runtime_error("failed to copy preamble");
@@ -57,14 +57,13 @@ int main(void) {
         preamble,
         PackageHeaderParser<PREAMBLE_SIZE_CFG, ENCODED_PAYLOAD_SIZE_LENGTH_CFG>()        
     );
-    PackageWriter package_writer(
-        [](const std::vector<std::uint8_t>& data, const std::size_t& header_size) {
-            return serialize_package_size(data.size(), PACKAGE_HEADER_LENGTH);
-        },
+    StmPackageWriter package_writer(
         [uart_controller_ptr = &uart_controller](const std::vector<std::uint8_t>& data) {
             uart_controller_ptr->write(data);
         },
-        PACKAGE_HEADER_LENGTH
+        static_cast<StmPackageWriter::Preamble>(preamble),
+        PackageHeaderSerializer<PREAMBLE_SIZE_CFG, ENCODED_PAYLOAD_SIZE_LENGTH_CFG>()
+
     );
     ApiMessageReader<StepperRequest> request_reader(
         &package_reader,
