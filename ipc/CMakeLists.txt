@@ -8,25 +8,27 @@ target_sources(stepper_service_proto_generated INTERFACE ${CMAKE_CURRENT_BINARY_
 target_include_directories(stepper_service_proto_generated INTERFACE ${CMAKE_CURRENT_BINARY_DIR} $ENV{NANOPB_PATH})
 add_dependencies(stepper_service_proto_generated stepper_service_proto)
 
-add_library(pb_common STATIC $ENV{NANOPB_PATH}/pb_common.c)
-target_include_directories(pb_common PUBLIC $ENV{NANOPB_PATH})
-target_compile_options(pb_common PRIVATE "-Os" "-g0")
+add_library(pb_common INTERFACE)
+target_sources(pb_common INTERFACE $ENV{NANOPB_PATH}/pb_common.c)
+target_include_directories(pb_common INTERFACE $ENV{NANOPB_PATH})
 
-add_library(pb_decode STATIC $ENV{NANOPB_PATH}/pb_decode.c)
-target_include_directories(pb_decode PUBLIC $ENV{NANOPB_PATH})
-target_compile_options(pb_decode PRIVATE "-Os" "-g0")
+add_library(pb_decode INTERFACE)
+target_sources(pb_decode INTERFACE $ENV{NANOPB_PATH}/pb_decode.c)
+target_include_directories(pb_decode INTERFACE $ENV{NANOPB_PATH})
+target_link_libraries(pb_decode INTERFACE pb_common)
 
-add_library(pb_encode STATIC $ENV{NANOPB_PATH}/pb_encode.c)
-target_include_directories(pb_encode PUBLIC $ENV{NANOPB_PATH})
-target_compile_options(pb_encode PRIVATE "-Os" "-g0")
+add_library(pb_encode INTERFACE)
+target_sources(pb_encode INTERFACE $ENV{NANOPB_PATH}/pb_encode.c)
+target_include_directories(pb_encode INTERFACE $ENV{NANOPB_PATH})
+target_link_libraries(pb_encode INTERFACE pb_common)
 
 add_library(pb_stepper_request_parser INTERFACE)
 target_include_directories(pb_stepper_request_parser INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(pb_stepper_request_parser INTERFACE stepper_service_proto_generated pb_decode pb_common)
+target_link_libraries(pb_stepper_request_parser INTERFACE stepper_service_proto_generated pb_decode)
 
 add_library(pb_stepper_response_serializer INTERFACE)
 target_include_directories(pb_stepper_response_serializer INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(pb_stepper_response_serializer INTERFACE stepper_service_proto_generated pb_encode pb_common)
+target_link_libraries(pb_stepper_response_serializer INTERFACE stepper_service_proto_generated pb_encode)
 
 add_library(stm_uart_controller INTERFACE)
 target_include_directories(
