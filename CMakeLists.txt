@@ -70,7 +70,6 @@ target_link_libraries(
     api_message_writer
     host
     package_reader
-    package_utils
     package_writer
     ring_buffer_input_stream
     stepper_request

@@ -18,13 +18,13 @@
 #include "stm32f103xb.h"
 
 #ifndef DATA_BUFFER_SIZE_CFG
-#  error "DATA_BUFFER_SIZE is not defined"
+#  error "DATA_BUFFER_SIZE_CFG is not defined"
 #endif
 #ifndef PREAMBLE_CFG
-#  error "PREAMBLE is not defined"
+#  error "PREAMBLE_CFG is not defined"
 #endif
 #ifndef PREAMBLE_SIZE_CFG
-#  error "PREAMBLE_SIZE is not defined"
+#  error "PREAMBLE_SIZE_CFG is not defined"
 #endif
 #ifndef ENCODED_PAYLOAD_SIZE_LENGTH_CFG
 #  error "ENCODED_PAYLOAD_SIZE_LENGTH is not defined"
@@ -63,7 +63,6 @@ int main(void) {
         },
         static_cast<StmPackageWriter::Preamble>(preamble),
         PackageHeaderSerializer<PREAMBLE_SIZE_CFG, ENCODED_PAYLOAD_SIZE_LENGTH_CFG>()
-
     );
     ApiMessageReader<StepperRequest> request_reader(
         &package_reader,
@@ -77,7 +76,7 @@ int main(void) {
             throw std::runtime_error("not implemented");
         }
     );
-    StepperService service;
+    StepperService service(nullptr);
     Host<StepperRequest, StepperResponse> host(
         &request_reader,
         &response_writer,
