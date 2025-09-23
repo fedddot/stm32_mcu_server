@@ -1,3 +1,3 @@
 add_library(stepper_provider INTERFACE)
 target_include_directories(stepper_provider INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)
-target_link_libraries(stepper_provider INTERFACE provider)
+target_link_libraries(stepper_provider INTERFACE provider stepper_types)
