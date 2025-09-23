@@ -4,7 +4,7 @@
 #include <chrono>
 
 namespace service {
-	using Duration = std::chrono::duration<int>;
+	using Duration = std::chrono::microseconds;
 	enum class Direction: int {
 		CLOCKWISE,
 		COUNTERCLOCKWISE,
