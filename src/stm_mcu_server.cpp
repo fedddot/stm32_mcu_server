@@ -1,11 +1,13 @@
 #include <cstdint>
+#include <cstring>
 #include <stdexcept>
 
 #include "api_message_reader.hpp"
 #include "api_message_writer.hpp"
 #include "host.hpp"
 #include "package_reader.hpp"
-#include "package_utils.hpp"
+#include "package_header_parser.hpp"
+#include "package_header_serializer.hpp"
 #include "package_writer.hpp"
 #include "ring_buffer_input_stream.hpp"
 #include "stepper_request.hpp"
@@ -15,18 +17,26 @@
 
 #include "stm32f103xb.h"
 
+#ifndef DATA_BUFFER_SIZE_CFG
+#  error "DATA_BUFFER_SIZE is not defined"
+#endif
+#ifndef PREAMBLE_CFG
+#  error "PREAMBLE is not defined"
+#endif
+#ifndef PREAMBLE_SIZE_CFG
+#  error "PREAMBLE_SIZE is not defined"
+#endif
+#ifndef ENCODED_PAYLOAD_SIZE_LENGTH_CFG
+#  error "ENCODED_PAYLOAD_SIZE_LENGTH is not defined"
+#endif
+
 using namespace host;
 using namespace service;
 using namespace ipc;
 
-#ifndef DATA_BUFFER_SIZE
-#  error "DATA_BUFFER_SIZE is not defined"
-#endif
-#ifndef PACKAGE_HEADER_LENGTH
-#  error "DATA_BUFFER_SIZE is not defined"
-#endif
+using StmPackageReader = PackageReader<PREAMBLE_SIZE_CFG, ENCODED_PAYLOAD_SIZE_LENGTH_CFG>;
 
-ipc::RingBufferInputStream<std::uint8_t, DATA_BUFFER_SIZE> s_buffer;
+RingBufferInputStream<std::uint8_t, DATA_BUFFER_SIZE_CFG> s_buffer;
 
 static void init_clock();
 
@@ -37,16 +47,15 @@ int main(void) {
             buff_ptr->enqueue(byte);
         }
     );
-    PackageReader package_reader(
+    
+    StmPackageReader::Preamble preamble;
+    if (nullptr == std::memcpy(preamble.data(), PREAMBLE_CFG, PREAMBLE_SIZE_CFG)) {
+        throw std::runtime_error("failed to copy preamble");
+    }
+    StmPackageReader package_reader(
         &s_buffer,
-        [](const InputStream<std::uint8_t>& stream) -> std::size_t {
-            std::vector<std::uint8_t> package_size_data(PACKAGE_HEADER_LENGTH, 0);
-            for (std::size_t i = 0; i < PACKAGE_HEADER_LENGTH; ++i) {
-                package_size_data[i] = stream.inspect(i);
-            }
-            return parse_package_size(package_size_data);
-        },
-        PACKAGE_HEADER_LENGTH
+        preamble,
+        PackageHeaderParser<PREAMBLE_SIZE_CFG, ENCODED_PAYLOAD_SIZE_LENGTH_CFG>()        
     );
     PackageWriter package_writer(
         [](const std::vector<std::uint8_t>& data, const std::size_t& header_size) {
