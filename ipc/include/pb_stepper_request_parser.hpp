@@ -23,7 +23,7 @@ namespace ipc {
             stepper_service_StepperRequest request = stepper_service_StepperRequest_init_zero;
             pb_istream_t stream = pb_istream_from_buffer(data.data(), data.size());
             if (!pb_decode(&stream, stepper_service_StepperRequest_fields, &request)) {
-                throw std::runtime_error("Failed to decode StepperRequest: " + std::string(PB_GET_ERROR(&stream)));
+                throw std::runtime_error("failed to decode StepperRequest: " + std::string(PB_GET_ERROR(&stream)));
             }
             switch (request.which_request) {
             case stepper_service_StepperRequest_enable_request_tag:
@@ -31,7 +31,7 @@ namespace ipc {
             case stepper_service_StepperRequest_steps_request_tag:
                 return parse_steps_request(request);
             default:
-                throw std::runtime_error("Unknown StepperRequest type");
+                throw std::runtime_error("unsupported StepperRequest type");
             }
         }            
     private:

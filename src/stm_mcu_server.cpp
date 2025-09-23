@@ -13,6 +13,7 @@
 #include "stepper_request.hpp"
 #include "stepper_response.hpp"
 #include "stepper_service.hpp"
+#include "stepper_types.hpp"
 #include "stm_uart_controller.hpp"
 #include "pb_stepper_request_parser.hpp"
 #include "pb_stepper_response_serializer.hpp"
@@ -72,9 +73,7 @@ int main(void) {
     );
     ApiMessageWriter<StepperResponse> response_writer(
         &package_writer,
-        [](const StepperResponse& request) -> std::vector<std::uint8_t> {
-            throw std::runtime_error("not implemented");
-        }
+        PbStepperResponseSerializer()
     );
     StepperService service(nullptr);
     Host<StepperRequest, StepperResponse> host(
@@ -84,6 +83,7 @@ int main(void) {
         [](const std::exception& e) {
             return StepperResponse(
                 StepperResponse::Result::FAILURE,
+                State::DISABLED,
                 std::string(e.what())
             );
         }
