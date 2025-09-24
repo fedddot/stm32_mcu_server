@@ -1,18 +1,30 @@
-#ifndef	STEPPER_PROVIDER_HPP
-#define	STEPPER_PROVIDER_HPP
+#ifndef	STM32_STEPPER_PROVIDER_HPP
+#define	STM32_STEPPER_PROVIDER_HPP
 
 #include "stepper_provider.hpp"
 #include "stepper_types.hpp"
+#include <stdexcept>
 
 namespace provider {
-	class StepperProvider: public StepperProvider {
+	class Stm32StepperProvider: public StepperProvider {
 	public:
-		virtual ~StepperProvider() noexcept = default;
-		virtual void enable() = 0;
-		virtual void disable() = 0;
-		virtual void step(const int steps_number, const service::Direction direction, const service::Duration step_duration) = 0;
-		virtual service::State status() const = 0;
+		Stm32StepperProvider() = default;
+		Stm32StepperProvider(const Stm32StepperProvider&) = delete;
+		Stm32StepperProvider& operator=(const Stm32StepperProvider&) = delete;
+
+		void enable() override {
+			throw std::runtime_error("not implemented");
+		}
+		void disable() override {
+			throw std::runtime_error("not implemented");
+		}
+		void step(const int steps_number, const service::Direction direction, const service::Duration step_duration) override {
+			throw std::runtime_error("not implemented");
+		}
+		service::State status() const override {
+			throw std::runtime_error("not implemented");
+		}
 	};
 }
 
-#endif // STEPPER_PROVIDER_HPP
+#endif // STM32_STEPPER_PROVIDER_HPP
