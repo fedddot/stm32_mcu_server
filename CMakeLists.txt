@@ -79,6 +79,7 @@ target_link_libraries(
     pb_stepper_request_parser
     pb_stepper_response_serializer
 )
+target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE -O1 -g)
 
 add_subdirectory(embedded-service-framework ${CMAKE_BINARY_DIR}/_deps/embedded-service-framework-build)
 add_subdirectory(service)
