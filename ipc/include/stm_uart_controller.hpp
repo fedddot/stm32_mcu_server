@@ -7,31 +7,31 @@
 
 #include "stm32f103xb.h"
 
-#include "ipc_queue.hpp"
 #include "stm_isr_vector.hpp"
 
 #ifndef CLOCK_FREQUENCY
 #  error "CLOCK_FREQUENCY is not defined"
 #endif
 
-namespace stm32 {
+namespace ipc {
     class StmUartController {
     public:
-        StmUartController(ipc::IpcQueue<std::uint8_t> *ipc_queue) {
-            if (s_ipc_queue) {
+        using RxCallback = std::function<void(const std::uint8_t)>;
+        StmUartController(const RxCallback& rx_callback) {
+            if (s_rx_callback) {
                 throw std::runtime_error("an instance of uart controller already exists");
             }
-            if (!ipc_queue) {
-                throw std::invalid_argument("null data buffer ptr received");
+            if (!rx_callback) {
+                throw std::invalid_argument("null rx_callback received");
             }
             init_uart();
-            s_ipc_queue = ipc_queue;
+            s_rx_callback = rx_callback;
         }
         StmUartController(const StmUartController&) = delete;
         StmUartController& operator=(const StmUartController&) = delete;
         virtual ~StmUartController() noexcept {
             uninit_uart();
-            s_ipc_queue = nullptr;
+            s_rx_callback = nullptr;
         }
         void write(const std::vector<std::uint8_t>& data) {
             for (const auto byte : data) {
@@ -45,20 +45,20 @@ namespace stm32 {
             }
         }
     private:
-        static ipc::IpcQueue<std::uint8_t> *s_ipc_queue;
+        static RxCallback s_rx_callback;
         static void uart_rx_interrupt_handler() {
-            if (!s_ipc_queue) {
+            if (!s_rx_callback) {
                 return;
             }
             if (USART1->SR & USART_SR_RXNE) {
                 auto byte = USART1->DR;
-                s_ipc_queue->enqueue(static_cast<std::uint8_t>(byte));
+                s_rx_callback(static_cast<std::uint8_t>(byte));
             }
             USART1->SR &= ~USART_SR_RXNE; // Clear RXNE flag
         }
         static void init_uart() {
             RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
-            init_uart1_isr(StmUartController::uart_rx_interrupt_handler);
+            stm32::init_uart1_isr(StmUartController::uart_rx_interrupt_handler);
             RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
             GPIOA->CRH &= ~(GPIO_CRH_MODE9 | GPIO_CRH_CNF9);
             GPIOA->CRH |= (GPIO_CRH_MODE9_1 | GPIO_CRH_MODE9_0);
@@ -76,12 +76,12 @@ namespace stm32 {
         }
         static void uninit_uart() {
             USART1->CR1 &= ~USART_CR1_UE;
-            init_uart1_isr(nullptr);
+            stm32::init_uart1_isr(nullptr);
             NVIC_DisableIRQ(USART1_IRQn);
         }
     };
 
-    inline ipc::IpcQueue<std::uint8_t> *StmUartController::s_ipc_queue = nullptr;
+    inline StmUartController::RxCallback StmUartController::s_rx_callback = nullptr;
 }
 
 #endif // STM_UART_CONTROLLER_HPP

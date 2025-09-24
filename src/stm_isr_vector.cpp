@@ -1,5 +1,4 @@
 #include <cstdint>
-#include <cstring>
 
 #include "stm_isr_vector.hpp"
 

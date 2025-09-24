@@ -32,27 +32,7 @@ target_link_libraries(
     c
 )
 
-add_library(stm_thermo_manager_controller INTERFACE)
-target_include_directories(stm_thermo_manager_controller INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(
-    stm_thermo_manager_controller
-    INTERFACE
-    thermostat_controller
-    stm_uart_controller
-)
 
-add_library(stm_uart_controller INTERFACE)
-target_sources(
-    stm_uart_controller
-    INTERFACE
-)
-target_include_directories(stm_uart_controller INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(
-    stm_uart_controller
-    INTERFACE
-    ipc_queue
-    stm_isr_vector
-)
 
 add_library(stm_timer_controller INTERFACE)
 target_include_directories(
@@ -76,24 +56,33 @@ target_compile_definitions(
     ${CMAKE_PROJECT_NAME}
     PRIVATE
     -DSTM32F103x6
-    -DDATA_BUFFER_SIZE=256UL
-    -DPACKAGE_HEADER_LENGTH=4UL
     -DCLOCK_FREQUENCY=8000000UL
+    -DDATA_BUFFER_SIZE_CFG=256UL
+    -DPREAMBLE_CFG=\"ESF_MSG_START\"
+    -DPREAMBLE_SIZE_CFG=13
+    -DENCODED_PAYLOAD_SIZE_LENGTH_CFG=2
 )
 target_link_libraries(
     ${CMAKE_PROJECT_NAME}
     PRIVATE
     mcu_startup
-
-    stm_thermo_manager_controller
+    api_message_reader
+    api_message_writer
+    host
+    package_reader
+    package_writer
+    ring_buffer_input_stream
+    stepper_request
+    stepper_response
+    stepper_service
     stm_uart_controller
-
-    ipc_queue
-    package_utils
-    proto_thermostat_api_request_parser
-    proto_thermostat_api_response_serializer
-    ring_queue
-    thermostat_app
+    pb_stepper_request_parser
+    pb_stepper_response_serializer
+    stm32_stepper_provider
 )
+target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE -O1 -g)
 
-add_subdirectory($ENV{MCU_SERVER_PATH} ${CMAKE_BINARY_DIR}/_deps/mcu_server-build)
+add_subdirectory(embedded-service-framework ${CMAKE_BINARY_DIR}/_deps/embedded-service-framework-build)
+add_subdirectory(service)
+add_subdirectory(ipc)
+add_subdirectory(provider)
