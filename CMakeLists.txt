@@ -78,6 +78,7 @@ target_link_libraries(
     stm_uart_controller
     pb_stepper_request_parser
     pb_stepper_response_serializer
+    stm32_stepper_provider
 )
 target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE -O1 -g)
 
