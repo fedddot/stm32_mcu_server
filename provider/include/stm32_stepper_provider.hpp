@@ -1,9 +1,10 @@
 #ifndef	STM32_STEPPER_PROVIDER_HPP
 #define	STM32_STEPPER_PROVIDER_HPP
 
+#include <stdexcept>
+
 #include "stepper_provider.hpp"
 #include "stepper_types.hpp"
-#include <stdexcept>
 
 namespace provider {
 	class Stm32StepperProvider: public StepperProvider {

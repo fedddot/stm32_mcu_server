@@ -37,6 +37,7 @@
 using namespace host;
 using namespace service;
 using namespace ipc;
+using namespace provider;
 
 using StmPackageReader = PackageReader<PREAMBLE_SIZE_CFG, ENCODED_PAYLOAD_SIZE_LENGTH_CFG>;
 using StmPackageWriter = PackageWriter<PREAMBLE_SIZE_CFG, ENCODED_PAYLOAD_SIZE_LENGTH_CFG>;
@@ -76,7 +77,8 @@ int main(void) {
         &package_writer,
         PbStepperResponseSerializer()
     );
-    StepperService service(nullptr);
+    Stm32StepperProvider stepper_provider;
+    StepperService service(&stepper_provider);
     Host<StepperRequest, StepperResponse> host(
         &request_reader,
         &response_writer,
