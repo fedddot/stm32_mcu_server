@@ -12,6 +12,7 @@ services:
       additional_contexts:
         esf-dev-image: service:esf-dev
       network: host
+    network_mode: host
     tty: true
     volumes:
       - ..:/usr/app/src
