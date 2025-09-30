@@ -78,7 +78,7 @@ int main(void) {
         PbSegwayResponseSerializer()
     );
     Stm32SegwayProvider segway_provider;
-    SegwayService service(&segway_provider);
+    SegwayService service(nullptr, nullptr, nullptr);
     Host<SegwayRequest, SegwayResponse> host(
         &request_reader,
         &response_writer,

@@ -13,6 +13,11 @@ namespace service {
 		ENABLED,
 		DISABLED,
 	};
+	enum class Axis: int {
+		X,
+		Y,
+		Z
+	};
 }
 
 #endif // SEGWAY_TYPES_HPP
