@@ -1,17 +1,17 @@
-#ifndef	STM32_STEPPER_PROVIDER_HPP
-#define	STM32_STEPPER_PROVIDER_HPP
+#ifndef	STM32_SEGWAY_PROVIDER_HPP
+#define	STM32_SEGWAY_PROVIDER_HPP
 
 #include <stdexcept>
 
-#include "stepper_provider.hpp"
-#include "stepper_types.hpp"
+#include "segway_provider.hpp"
+#include "segway_types.hpp"
 
 namespace provider {
-	class Stm32StepperProvider: public StepperProvider {
+	class Stm32SegwayProvider: public SegwayProvider {
 	public:
-		Stm32StepperProvider() = default;
-		Stm32StepperProvider(const Stm32StepperProvider&) = delete;
-		Stm32StepperProvider& operator=(const Stm32StepperProvider&) = delete;
+		Stm32SegwayProvider() = default;
+		Stm32SegwayProvider(const Stm32SegwayProvider&) = delete;
+		Stm32SegwayProvider& operator=(const Stm32SegwayProvider&) = delete;
 
 		void enable() override {
 			throw std::runtime_error("not implemented");
@@ -28,4 +28,4 @@ namespace provider {
 	};
 }
 
-#endif // STM32_STEPPER_PROVIDER_HPP
+#endif // STM32_SEGWAY_PROVIDER_HPP

@@ -1,13 +1,13 @@
-#ifndef	STEPPER_PROVIDER_HPP
-#define	STEPPER_PROVIDER_HPP
+#ifndef	SEGWAY_PROVIDER_HPP
+#define	SEGWAY_PROVIDER_HPP
 
 #include "provider.hpp"
-#include "stepper_types.hpp"
+#include "segway_types.hpp"
 
 namespace provider {
-	class StepperProvider: public Provider {
+	class SegwayProvider: public Provider {
 	public:
-		virtual ~StepperProvider() noexcept = default;
+		virtual ~SegwayProvider() noexcept = default;
 		virtual void enable() = 0;
 		virtual void disable() = 0;
 		virtual void step(const int steps_number, const service::Direction direction, const service::Duration step_duration) = 0;
@@ -15,4 +15,4 @@ namespace provider {
 	};
 }
 
-#endif // STEPPER_PROVIDER_HPP
+#endif // SEGWAY_PROVIDER_HPP

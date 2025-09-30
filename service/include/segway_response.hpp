@@ -1,28 +1,28 @@
-#ifndef	STEPPER_RESPONSE_HPP
-#define	STEPPER_RESPONSE_HPP
+#ifndef	SEGWAY_RESPONSE_HPP
+#define	SEGWAY_RESPONSE_HPP
 
 #include <optional>
 #include <string>
 
-#include "stepper_types.hpp"
+#include "segway_types.hpp"
 
 namespace service {
-	class StepperResponse {
+	class SegwayResponse {
 	public:
 		enum class Result: int {
 			SUCCESS,
 			FAILURE,
 		};
-		StepperResponse(
+		SegwayResponse(
 			const Result& result,
 			const State& state,
 			const std::optional<std::string>& error_message = std::nullopt
 		): m_result(result), m_state(state), m_error_message(error_message) {
 
 		}
-		StepperResponse(const StepperResponse&) = default;
-		StepperResponse& operator=(const StepperResponse&) = delete;
-		virtual ~StepperResponse() noexcept = default;
+		SegwayResponse(const SegwayResponse&) = default;
+		SegwayResponse& operator=(const SegwayResponse&) = delete;
+		virtual ~SegwayResponse() noexcept = default;
 
 		Result result() const {
 			return m_result;
@@ -40,4 +40,4 @@ namespace service {
 	};
 }
 
-#endif // STEPPER_RESPONSE_HPP
+#endif // SEGWAY_RESPONSE_HPP

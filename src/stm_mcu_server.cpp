@@ -10,14 +10,14 @@
 #include "package_header_serializer.hpp"
 #include "package_writer.hpp"
 #include "ring_buffer_input_stream.hpp"
-#include "stepper_request.hpp"
-#include "stepper_response.hpp"
-#include "stepper_service.hpp"
-#include "stepper_types.hpp"
+#include "segway_request.hpp"
+#include "segway_response.hpp"
+#include "segway_service.hpp"
+#include "segway_types.hpp"
 #include "stm_uart_controller.hpp"
-#include "pb_stepper_request_parser.hpp"
-#include "pb_stepper_response_serializer.hpp"
-#include "stm32_stepper_provider.hpp"
+#include "pb_segway_request_parser.hpp"
+#include "pb_segway_response_serializer.hpp"
+#include "stm32_segway_provider.hpp"
 
 #include "stm32f103xb.h"
 
@@ -69,23 +69,23 @@ int main(void) {
         static_cast<StmPackageWriter::Preamble>(preamble),
         PackageHeaderSerializer<PREAMBLE_SIZE_CFG, ENCODED_PAYLOAD_SIZE_LENGTH_CFG>()
     );
-    ApiMessageReader<StepperRequest> request_reader(
+    ApiMessageReader<SegwayRequest> request_reader(
         &package_reader,
-        PbStepperRequestParser()
+        PbSegwayRequestParser()
     );
-    ApiMessageWriter<StepperResponse> response_writer(
+    ApiMessageWriter<SegwayResponse> response_writer(
         &package_writer,
-        PbStepperResponseSerializer()
+        PbSegwayResponseSerializer()
     );
-    Stm32StepperProvider stepper_provider;
-    StepperService service(&stepper_provider);
-    Host<StepperRequest, StepperResponse> host(
+    Stm32SegwayProvider segway_provider;
+    SegwayService service(&segway_provider);
+    Host<SegwayRequest, SegwayResponse> host(
         &request_reader,
         &response_writer,
         &service,
         [](const std::exception& e) {
-            return StepperResponse(
-                StepperResponse::Result::FAILURE,
+            return SegwayResponse(
+                SegwayResponse::Result::FAILURE,
                 State::DISABLED,
                 std::string(e.what())
             );

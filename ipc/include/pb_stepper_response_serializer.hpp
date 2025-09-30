@@ -1,5 +1,5 @@
-#ifndef PB_STEPPER_RESPONSE_SERIALIZER_HPP
-#define PB_STEPPER_RESPONSE_SERIALIZER_HPP
+#ifndef PB_SEGWAY_RESPONSE_SERIALIZER_HPP
+#define PB_SEGWAY_RESPONSE_SERIALIZER_HPP
 
 #include <cstdint>
 #include <map>
@@ -8,31 +8,31 @@
 #include <vector>
 
 #include "pb_encode.h"
-#include "stepper_response.hpp"
-#include "stepper_service.pb.h"
-#include "stepper_types.hpp"
+#include "segway_response.hpp"
+#include "segway_service.pb.h"
+#include "segway_types.hpp"
 
 namespace ipc {
-    class PbStepperResponseSerializer {
+    class PbSegwayResponseSerializer {
     public:
-        PbStepperResponseSerializer() = default;
-        PbStepperResponseSerializer(const PbStepperResponseSerializer &) = default;
-        PbStepperResponseSerializer &operator=(const PbStepperResponseSerializer &) = default;
-        virtual ~PbStepperResponseSerializer() noexcept = default;
-        std::vector<uint8_t> operator()(const service::StepperResponse& response) const {
-            using ResponseResult = service::StepperResponse::Result;
-            const auto result_mapping = std::map<ResponseResult, stepper_service_StepperResultCode> {
-                { ResponseResult::SUCCESS, stepper_service_StepperResultCode_SUCCESS },
-                { ResponseResult::FAILURE, stepper_service_StepperResultCode_FAILURE },
+        PbSegwayResponseSerializer() = default;
+        PbSegwayResponseSerializer(const PbSegwayResponseSerializer &) = default;
+        PbSegwayResponseSerializer &operator=(const PbSegwayResponseSerializer &) = default;
+        virtual ~PbSegwayResponseSerializer() noexcept = default;
+        std::vector<uint8_t> operator()(const service::SegwayResponse& response) const {
+            using ResponseResult = service::SegwayResponse::Result;
+            const auto result_mapping = std::map<ResponseResult, segway_service_SegwayResultCode> {
+                { ResponseResult::SUCCESS, segway_service_SegwayResultCode_SUCCESS },
+                { ResponseResult::FAILURE, segway_service_SegwayResultCode_FAILURE },
             };
-            const auto state_mapping = std::map<service::State, stepper_service_StepperStatus> {
-                { service::State::DISABLED, stepper_service_StepperStatus_DISABLED },
-                { service::State::ENABLED, stepper_service_StepperStatus_ENABLED },
+            const auto state_mapping = std::map<service::State, segway_service_SegwayStatus> {
+                { service::State::DISABLED, segway_service_SegwayStatus_DISABLED },
+                { service::State::ENABLED, segway_service_SegwayStatus_ENABLED },
             };
             const auto pb_msg = response.error_message().has_value() ? response.error_message().value() : "";
-            const auto pb_response = stepper_service_StepperResponse {
+            const auto pb_response = segway_service_SegwayResponse {
                 .result = result_mapping.at(response.result()),
-                .stepper_status = state_mapping.at(response.state()),
+                .segway_status = state_mapping.at(response.state()),
                 .error_message = pb_callback_t {
                     .funcs = {
                         .encode = &encode_string,
@@ -47,8 +47,8 @@ namespace ipc {
                 buffer,
                 BUFF_SIZE
             );
-            if (!pb_encode(&ostream, stepper_service_StepperResponse_fields, &pb_response)) {
-                throw std::runtime_error("failed to encode StepperResponse into protocol buffer: " + std::string(PB_GET_ERROR(&ostream)));
+            if (!pb_encode(&ostream, segway_service_SegwayResponse_fields, &pb_response)) {
+                throw std::runtime_error("failed to encode SegwayResponse into protocol buffer: " + std::string(PB_GET_ERROR(&ostream)));
             }
             return std::vector<std::uint8_t>((const char *)buffer, (const char *)buffer + ostream.bytes_written);
         }            
@@ -65,5 +65,5 @@ namespace ipc {
         }
     };
 } // namespace ipc
-#endif // PB_STEPPER_RESPONSE_SERIALIZER_HPP
+#endif // PB_SEGWAY_RESPONSE_SERIALIZER_HPP
                     

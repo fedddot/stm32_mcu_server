@@ -1,7 +1,7 @@
-add_library(stepper_provider INTERFACE)
-target_include_directories(stepper_provider INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)
-target_link_libraries(stepper_provider INTERFACE provider stepper_types)
+add_library(segway_provider INTERFACE)
+target_include_directories(segway_provider INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)
+target_link_libraries(segway_provider INTERFACE provider segway_types)
 
-add_library(stm32_stepper_provider INTERFACE)
-target_include_directories(stm32_stepper_provider INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)
-target_link_libraries(stm32_stepper_provider INTERFACE stepper_provider stepper_types)
+add_library(stm32_segway_provider INTERFACE)
+target_include_directories(stm32_segway_provider INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)
+target_link_libraries(stm32_segway_provider INTERFACE segway_provider segway_types)

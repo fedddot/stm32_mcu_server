@@ -1,41 +1,41 @@
 syntax = "proto3";
 
-package stepper_service;
+package segway_service;
 
-message StepperRequest {
+message SegwayRequest {
 	oneof request {
-		StepperEnableRequest enable_request = 1;
-		StepperStepsRequest steps_request = 2;
+		SegwayEnableRequest enable_request = 1;
+		SegwayStepsRequest steps_request = 2;
 	}
 }
 
-message StepperEnableRequest {
-	StepperStatus status = 1;
+message SegwayEnableRequest {
+	SegwayStatus status = 1;
 }
 
-message StepperStepsRequest {
-	StepperDirection direction = 1;
+message SegwayStepsRequest {
+	SegwayDirection direction = 1;
 	uint32 step_duration_us = 2;
 	uint32 steps_number = 3;
 }
 
-message StepperResponse {
-	StepperResultCode result = 1;
-	StepperStatus stepper_status = 2;
+message SegwayResponse {
+	SegwayResultCode result = 1;
+	SegwayStatus segway_status = 2;
 	string error_message = 3;
 }
 
-enum StepperStatus {
+enum SegwayStatus {
 	DISABLED = 0;
 	ENABLED = 1;
 }
 
-enum StepperDirection {
+enum SegwayDirection {
 	CW = 0;
 	CCW = 1;
 }
 
-enum StepperResultCode {
+enum SegwayResultCode {
 	SUCCESS = 0;
 	FAILURE = 1;
 }

@@ -1,5 +1,5 @@
-#ifndef	STEPPER_TYPES_HPP
-#define	STEPPER_TYPES_HPP
+#ifndef	SEGWAY_TYPES_HPP
+#define	SEGWAY_TYPES_HPP
 
 #include <chrono>
 
@@ -15,4 +15,4 @@ namespace service {
 	};
 }
 
-#endif // STEPPER_TYPES_HPP
+#endif // SEGWAY_TYPES_HPP

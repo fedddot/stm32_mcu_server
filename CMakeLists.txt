@@ -72,13 +72,13 @@ target_link_libraries(
     package_reader
     package_writer
     ring_buffer_input_stream
-    stepper_request
-    stepper_response
-    stepper_service
+    segway_request
+    segway_response
+    segway_service
     stm_uart_controller
-    pb_stepper_request_parser
-    pb_stepper_response_serializer
-    stm32_stepper_provider
+    pb_segway_request_parser
+    pb_segway_response_serializer
+    stm32_segway_provider
 )
 target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE -O1 -g)
 

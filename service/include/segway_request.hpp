@@ -1,12 +1,12 @@
-#ifndef	STEPPER_REQUEST_HPP
-#define	STEPPER_REQUEST_HPP
+#ifndef	SEGWAY_REQUEST_HPP
+#define	SEGWAY_REQUEST_HPP
 
 #include <optional>
 
-#include "stepper_types.hpp"
+#include "segway_types.hpp"
 
 namespace service {
-	class StepperRequest {
+	class SegwayRequest {
 	public:
 		enum class Type: int {
 			ENABLE,
@@ -14,7 +14,7 @@ namespace service {
 			STEPS,
 			STATUS,
 		};
-		StepperRequest(
+		SegwayRequest(
 			const Type& type,
 			const std::optional<Direction>& direction = std::nullopt,
 			const std::optional<int>& steps_number = std::nullopt,
@@ -22,9 +22,9 @@ namespace service {
 		): m_type(type), m_direction(direction), m_steps_number(steps_number), m_step_duration(step_duration) {
 
 		}
-		StepperRequest(const StepperRequest&) = default;
-		StepperRequest& operator=(const StepperRequest&) = delete;
-		virtual ~StepperRequest() noexcept = default;
+		SegwayRequest(const SegwayRequest&) = default;
+		SegwayRequest& operator=(const SegwayRequest&) = delete;
+		virtual ~SegwayRequest() noexcept = default;
 
 		Type type() const {
 			return m_type;
@@ -46,4 +46,4 @@ namespace service {
 	};
 }
 
-#endif // STEPPER_REQUEST_HPP
+#endif // SEGWAY_REQUEST_HPP
