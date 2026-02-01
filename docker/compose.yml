@@ -12,4 +12,4 @@ services:
         esf-dev-image: service:esf-dev
     tty: true
     volumes:
-      - .:/usr/app/src
+      - ..:/usr/app/src
