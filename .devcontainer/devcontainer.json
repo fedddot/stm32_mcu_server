@@ -7,7 +7,6 @@
 		"vscode": {
 			"extensions": [
 				"llvm-vs-code-extensions.vscode-clangd",
-				"ms-azuretools.vscode-docker",
 				"mhutchie.git-graph",
 				"twxs.cmake",
 				"ms-vscode.cmake-tools",
@@ -18,7 +17,7 @@
 				"ms-vscode.hexeditor"
 			],
 			"settings": {
-				"clangd.path": "/usr/lib/llvm-18/bin/clangd",
+				"clangd.path": "/usr/bin/clangd",
 				"clangd.arguments": ["--query-driver=/usr/bin/arm-none-eabi-g++,/usr/bin/arm-none-eabi-gcc"],
 				"cmake.debugConfig": {
 					"type": "cppdbg",
