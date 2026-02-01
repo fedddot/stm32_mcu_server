@@ -11,6 +11,18 @@ add_library(stm_isr_vector INTERFACE)
 target_sources(stm_isr_vector INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src/stm_isr_vector.cpp)
 target_include_directories(stm_isr_vector INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+add_library(mcp2515_reader INTERFACE)
+target_include_directories(
+    mcp2515_reader
+    INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+target_link_libraries(
+    mcp2515_reader
+    INTERFACE
+    data_reader
+)
+
 add_library(mcu_startup INTERFACE)
 target_sources(
     mcu_startup
@@ -61,6 +73,7 @@ target_link_libraries(
     ${CMAKE_PROJECT_NAME}
     PRIVATE
     mcu_startup
+    mcp2515_reader
 )
 
 add_subdirectory(embedded-service-framework ${CMAKE_BINARY_DIR}/_deps/embedded-service-framework-build)

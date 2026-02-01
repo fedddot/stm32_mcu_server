@@ -1,4 +1,5 @@
 #include "stm32f103xb.h"
+#include "mcp2515_reader.hpp"
 
 #ifndef DATA_BUFFER_SIZE
 #  error "DATA_BUFFER_SIZE is not defined"
