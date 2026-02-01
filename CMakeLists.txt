@@ -5,7 +5,7 @@ include(gcc-arm-none-eabi.cmake)
 project(stm_mcu_server C CXX ASM)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -T \"stm32-cube-f1/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/gcc/linker/STM32F103XB_FLASH.ld\"")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -T \"${CMAKE_SOURCE_DIR}/stm32-cube-f1/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/gcc/linker/STM32F103XB_FLASH.ld\"")
 
 add_library(stm_isr_vector INTERFACE)
 target_sources(stm_isr_vector INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src/stm_isr_vector.cpp)
@@ -30,28 +30,6 @@ target_link_libraries(
     INTERFACE
     stm_isr_vector
     c
-)
-
-add_library(stm_thermo_manager_controller INTERFACE)
-target_include_directories(stm_thermo_manager_controller INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(
-    stm_thermo_manager_controller
-    INTERFACE
-    thermostat_controller
-    stm_uart_controller
-)
-
-add_library(stm_uart_controller INTERFACE)
-target_sources(
-    stm_uart_controller
-    INTERFACE
-)
-target_include_directories(stm_uart_controller INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(
-    stm_uart_controller
-    INTERFACE
-    ipc_queue
-    stm_isr_vector
 )
 
 add_library(stm_timer_controller INTERFACE)
@@ -84,16 +62,6 @@ target_link_libraries(
     ${CMAKE_PROJECT_NAME}
     PRIVATE
     mcu_startup
-
-    stm_thermo_manager_controller
-    stm_uart_controller
-
-    ipc_queue
-    package_utils
-    proto_thermostat_api_request_parser
-    proto_thermostat_api_response_serializer
-    ring_queue
-    thermostat_app
 )
 
 add_subdirectory(embedded-service-framework ${CMAKE_BINARY_DIR}/_deps/embedded-service-framework-build)
