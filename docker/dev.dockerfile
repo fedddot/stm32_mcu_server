@@ -1,8 +1,8 @@
-FROM esf-dev-image:latest
+FROM base
 
-RUN apt install -y gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib gdb-multiarch
-RUN apt-get install -y bsdmainutils
-RUN apt install -y python3-pip
+RUN apk add gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib gdb-base
+RUN apk add bsdmainutils
+RUN apk add python3-pip
 RUN pip3 install --break-system-packages protobuf grpcio-tools
 
 ARG EXTERNAL_PATH=/usr/src/external

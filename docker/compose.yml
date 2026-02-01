@@ -1,0 +1,14 @@
+include:
+  - ../embedded-service-framework/docker/compose.yml
+
+services:
+  # STM32 development service that depends on the ESF dev image/build
+  stm32-esf-dev:
+    build:
+      context: ..
+      dockerfile: ./docker/dev.dockerfile
+      additional_contexts:
+        base: service:esf-dev
+    tty: true
+    volumes:
+      - .:/usr/app/src
