@@ -29,7 +29,6 @@ target_link_libraries(
     mcu_startup
     INTERFACE
     stm_isr_vector
-    c
 )
 
 add_library(stm_timer_controller INTERFACE)
