@@ -1,6 +1,6 @@
 FROM esf-dev-image
 
-RUN apk add gcc-arm-none-eabi
+RUN apk add gcc-arm-none-eabi g++-arm-none-eabi
 RUN apk add newlib-arm-none-eabi
 RUN apk add gdb
 RUN apk add util-linux
