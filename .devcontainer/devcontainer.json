@@ -1,8 +1,8 @@
 {
 	"name": "stm-dev-container",
-	"image": "stm-dev:latest",
+	"dockerComposeFile": "../docker/compose.yml",
+	"service": "stm32-esf-dev",
 	"privileged": true,
-	"runArgs": [ "--network=host" ],
 	"customizations": {
 		"vscode": {
 			"extensions": [
@@ -33,6 +33,5 @@
 			}
 		}
 	},
-	"workspaceMount": "source=${localWorkspaceFolder},target=/usr/app/src,type=bind",
 	"workspaceFolder": "/usr/app/src"
 }
