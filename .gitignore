@@ -4,6 +4,7 @@ build
 driver
 !.devcontainer
 !.gitignore
+!.gitmodules
 !.github
 !*.dockerfile
 !*.json
