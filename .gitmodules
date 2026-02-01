@@ -2,3 +2,8 @@
 	path = embedded-service-framework
 	url = https://github.com/fedddot/embedded-service-framework.git
 	branch = main
+
+[submodule "stm32-cube-f1"]
+	path = stm32-cube-f1
+	url = https://github.com/STMicroelectronics/STM32CubeF1.git
+	branch = v1.8.6
