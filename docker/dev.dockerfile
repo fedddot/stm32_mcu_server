@@ -1,4 +1,4 @@
-FROM base
+FROM esf-dev-image
 
 RUN apk add gcc-arm-none-eabi
 RUN apk add newlib-arm-none-eabi
@@ -12,4 +12,4 @@ WORKDIR /usr/src/app
 
 ENV PATH=${PATH}:/usr/bin
 
-CMD ["/bin/bash"]
+ENTRYPOINT [ "sh" ]

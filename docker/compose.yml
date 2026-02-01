@@ -4,11 +4,12 @@ include:
 services:
   # STM32 development service that depends on the ESF dev image/build
   stm32-esf-dev:
+    image: stm32-esf-dev-image
     build:
       context: ..
       dockerfile: ./docker/dev.dockerfile
       additional_contexts:
-        base: service:esf-dev
+        esf-dev-image: service:esf-dev
     tty: true
     volumes:
       - .:/usr/app/src
